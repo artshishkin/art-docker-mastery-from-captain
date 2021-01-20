@@ -162,4 +162,16 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
     -  `docker network disconnect my_app_net webhost`
     -  `docker container inspect webhost` -> 1 network - bridge    
         
-         
+#####  30. Docker Networks: DNS and How Containers Find Each Other
+
+1.  Create new container
+    -  `docker container run -d --name my_nginx --network my_app_net nginx:alpine`
+2.  Inspect network
+    -  `docker network inspect my_app_net` -> 2 containers:
+        -  `new_nginx`
+        -  `my_nginx`
+3.  DNS resolution
+    -  `docker container exec -it my_nginx ping new_nginx`
+        -  `PING new_nginx (172.18.0.2): 56 data bytes`
+        -  `64 bytes from 172.18.0.2: seq=0 ttl=64 time=2.889 ms`
+                
