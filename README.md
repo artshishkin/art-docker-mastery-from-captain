@@ -123,4 +123,19 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
         -  **got an error**
         -  `docker: Error response from daemon: OCI runtime create failed: container_linux.go:370: starting container process caused: exec: "bash": executable file not found in $PATH: unknown.`       
     -  `docker container run -it alpine sh`
-    -  `apk` - alpine's install manager     
+    -  `apk` - alpine's install manager
+    
+#####  27. Docker Networks: Concepts for Private and Public Comms in Containers
+
+1.  publish
+    -  `docker container run -p 80:80 --name webhost -d nginx`
+2.  port    
+    -  `docker container port webhost`
+        -  `80/tcp -> 0.0.0.0:80`
+3.  inspect format        
+    -  `docker container inspect --format "{{ .NetworkSettings.IPAddress }}" webhost` - filter like JSONPath
+        -  `172.17.0.2` - **not** like local address of host machine        
+    
+
+
+         
