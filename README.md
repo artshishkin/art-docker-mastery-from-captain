@@ -63,4 +63,9 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
 -  `999      20238  4.8  2.6 1579620 105960 ?      Ssl  12:03   0:01 mongod --bind_ip_all`
 -  `ps aux | grep mongo` - list processes filtered by mongo
 
-    
+#####  23. Assignment: Manage Multiple Containers
+
+-  `docker container run --name nginx --detach --publish 80:80 nginx`
+-  `docker container run --name httpd --detach --publish 8080:80 httpd`    
+-  `docker container run --env MYSQL_RANDOM_ROOT_PASSWORD=yes --name mysql --detach --publish 3307:3306 mysql`
+-  `docker container logs mysql` - to view generated password in logs
