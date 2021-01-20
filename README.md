@@ -27,3 +27,11 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
 -  Customize shell (Optional)
     -  [Sweet Shell: With Oh-My-Zsh, SpaceVim, Gruvbox, True Color, and Demo Mode. For macOS, Linux, and Windows 10](https://www.bretfisher.com/shell/)    
     
+#####  18. Check Our Docker Install and Config
+
+-  `docker version`
+-  `docker info`
+-  `docker` - list of available commands
+-  docker command line structure:
+    -  old (still works): `docker <command> (options)` - ex.: docker run ...   
+    -  new: `docker <command> <sub-command> (options)` - ex.: docker container run ...   
