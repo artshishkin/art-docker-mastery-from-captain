@@ -83,4 +83,44 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
     -  `docker container inspect nginx`
 4.  stats
     -  `docker container stats` - cpu, memory usage of all containers  
-            
+
+#####  26. Getting a Shell Inside Containers: No Need for SSH
+
+1.  Command `it`
+    -  `docker container run --help`
+        -  `-t, --tty                            Allocate a pseudo-TTY`
+        -  `-i, --interactive                    Keep STDIN open even if not attached`
+        -  `docker container run [OPTIONS] IMAGE [COMMAND] [ARG...]`
+    -  `docker container run -it --name proxy nginx bash`
+        -  `ls -al` - view files
+        -  `exit` - exit from bash
+    -  `docker ps`
+    -  **container __proxy__ is stopped**
+    -  because we changed the default command
+    -  `"/docker-entrypoint.sh bash"` but was `"/docker-entrypoint.sh nginx -g 'daemon off;"'
+    -  `docker container run --name ubuntu -it ubuntu` -> bash is default no need to add at the end
+    -  `apt-get update`
+    -  `apt-get install -y curl`
+    -  `exit` -> container stops
+    -  `docker container start --help`
+        -  `-a, --attach               Attach STDOUT/STDERR and forward signals`
+        -  `-i, --interactive          Attach container's STDIN`
+    -  `docker container start -ai ubuntu`
+    -  `curl google.com`
+    -  `exit`
+2.  Command `exec`
+    -  `docker container exec --help`
+    -  `docker container exec -it mysql bash`
+        -  `apt-get update && apt-get install -y procps` - install `ps`
+        -  `ps aux`
+    -  `exit`
+    -  still runs
+3.  Alpine image
+    -  `docker pull alpine`
+    -  `docker image ls`
+    -  `alpine                                               latest           7731472c3f2a   5 days ago     5.61MB`
+    -  `docker container run -it alpine bash`
+        -  **got an error**
+        -  `docker: Error response from daemon: OCI runtime create failed: container_linux.go:370: starting container process caused: exec: "bash": executable file not found in $PATH: unknown.`       
+    -  `docker container run -it alpine sh`
+    -  `apk` - alpine's install manager     
