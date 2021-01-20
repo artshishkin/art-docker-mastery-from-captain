@@ -49,4 +49,18 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
 -  `docker container --help` - all sub-commands of `container` command
 -  `docker container rm ef6 52f 596` - remove containers (must be stopped) 
 -  `docker container rm ef6 52f 596 -f` - force remove containers (can remove even running) 
+
+#####  21. Container VS. VM: It's Just a Process
+
+-  `docker container run --name mongo -d mongo`
+-  `docker container top mongo`
+-  response
+    -  `PID                 USER                TIME                COMMAND`
+    -  `3236                999                 0:00                mongod --bind_ip_all`
+-  just a process
+-  `ps aux` - show me all running processes on host (Linux)
+-  will see mongod
+-  `999      20238  4.8  2.6 1579620 105960 ?      Ssl  12:03   0:01 mongod --bind_ip_all`
+-  `ps aux | grep mongo` - list processes filtered by mongo
+
     
