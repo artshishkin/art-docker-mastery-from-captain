@@ -35,3 +35,18 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
 -  docker command line structure:
     -  old (still works): `docker <command> (options)` - ex.: docker run ...   
     -  new: `docker <command> <sub-command> (options)` - ex.: docker container run ...   
+    
+#####  19. Starting a Nginx Web Server
+
+-  `docker container run --publish 80:80 nginx`
+-  `docker container run --publish 80:80 --detach nginx`
+-  `docker container ls` - list running containers
+-  `docker container stop 52` - few digits are enough for container with ID `52fe11b4e90c`
+-  `docker container ls -a` - list running and stopped containers
+-  `docker container run --detach --publish 80:80 --name webhost` - give container a name
+-  `docker container logs webhost`
+-  `docker container top webhost` - list processes inside the container
+-  `docker container --help` - all sub-commands of `container` command
+-  `docker container rm ef6 52f 596` - remove containers (must be stopped) 
+-  `docker container rm ef6 52f 596 -f` - force remove containers (can remove even running) 
+    
