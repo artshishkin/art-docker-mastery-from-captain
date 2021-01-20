@@ -136,6 +136,30 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
     -  `docker container inspect --format "{{ .NetworkSettings.IPAddress }}" webhost` - filter like JSONPath
         -  `172.17.0.2` - **not** like local address of host machine        
     
+#####  29. Docker Networks: CLI Management of Virtual Networks
 
-
+1.  List networks
+    -  `docker network ls`
+        -  `NETWORK ID          NAME                DRIVER              SCOPE`
+        -  `5fdac00ce9db        bridge              bridge              local`
+        -  `0ff20076244a        host                host                local`
+        -  `ccdb0e91ac9e        none                null                local`    
+2.  Inspect
+    -  `docker network inspect bridge`
+3.  Create network
+    -  `docker network create my_app_net` - creates network with driver bridge (default)
+    -  `docker network create --help`
+        -  has `--driver` option
+4.  Run container in new network
+    -  `docker container run -d --name new_nginx --network my_app_net nginx`
+5.  Connect container to network
+    -  `docker network --help`
+    -  `docker network connect my_app_net webhost`
+    -  `docker container inspect webhost` -> 2 networks
+        -  "bridge": 172.**17**.0.2
+        -  "my_app_net": 172.**18**.0.3
+6.  Disconnect container from network
+    -  `docker network disconnect my_app_net webhost`
+    -  `docker container inspect webhost` -> 1 network - bridge    
+        
          
