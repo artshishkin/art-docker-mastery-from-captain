@@ -69,3 +69,18 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
 -  `docker container run --name httpd --detach --publish 8080:80 httpd`    
 -  `docker container run --env MYSQL_RANDOM_ROOT_PASSWORD=yes --name mysql --detach --publish 3307:3306 mysql`
 -  `docker container logs mysql` - to view generated password in logs
+
+#####  25. What's Going On In Containers: CLI Process Monitoring
+
+1.  Start containers
+    -  `docker container run --name nginx -d nginx`
+    -  `docker container run --name mysql -d -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql`
+2.  top
+    -  `docker container top mysql`
+    -  `docker container top nginx`
+3.  inspect    
+    -  `docker container inspect mysql`
+    -  `docker container inspect nginx`
+4.  stats
+    -  `docker container stats` - cpu, memory usage of all containers  
+            
