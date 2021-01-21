@@ -309,4 +309,15 @@ We can have multiple containers on a created network respond to the same DNS add
 6.  Private repo
     -  first create private repo
     -  then push to it                 
-                        
+
+#####  40. Building Images: The Dockerfile Basics
+
+-  [view Dockerfile](https://github.com/artshishkin/art-docker-mastery-from-captain/blob/main/Section%204%20-%20Container%20Images/dockerfile-sample-1/Dockerfile)
+-  `FROM` - all images must have a FROM
+-  `ENV` - environment variables
+-  `RUN` - multiline command to insert in single layer
+-  `RUN`
+-  `EXPOSE` - expose these ports on the docker virtual network
+-  `CMD`
+    -  required: run this command when container is launched
+    -  only one CMD allowed, so if there are multiple, last one wins                       
