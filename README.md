@@ -249,4 +249,15 @@ We can have multiple containers on a created network respond to the same DNS add
 }
 ```
 
+#####  38. Images and Their Layers: Discover the Image Cache
+
+-  `docker history nginx:latest` - history of the image layers
+-  `docker history mysql` - other layers
+-  `docker image inspect nginx`
+    -  `"CMD [\"nginx\" \"-g\" \"daemon off;\"]"` - command by default
+-  Images are made up of file system changes and metadata
+-  Each layer is uniquely identified (SHA) and only stored once on a host
+-  This saves storage space on host and transfer time on push/pull
+-  A container is just a single read/write layer on top of image
+-  `docker image history` and `inspect` commands can teach us    
                 
