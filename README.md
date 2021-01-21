@@ -203,4 +203,50 @@ Solution
     -  `curl --version`    
         -  `curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3`    
 
+#####  34. Assignment: DNS Round Robin Test
+
+We can have multiple containers on a created network respond to the same DNS address
+1.  Create a new virtual network (default bridge driver)
+    -  `docker network create network_elasticsearch`
+2.  Create two containers from elasticsearch:2 image
+    -  `docker container run -d --network network_elasticsearch --network-alias search elasticsearch:2`    
+    -  twice
+    -  **or** use `--net` instead of `--network`    
+3.  Research and use `--network-alias search` when creating them to give them an additional DNS name to respond to
+4.  Run `alpine nslookup search` with `--net` to see the two containers list for the same DNS name
+    -  `docker network connect network_elasticsearch 75b781023e95` - connect alpine container to network 
+    -  `docker container inspect 75b781023e95` -> two networks
+    -  `docker container start -ai 75b781023e95`
+    -  `docker network inspect network_elasticsearch` -> 3 running containers (test from another shell)
+    -  in alpine sh run `nslookup search`        
+        -  `Server:         127.0.0.11`
+        -  `Address:        127.0.0.11:53`
+        -  `Non-authoritative answer:`
+        -  `*** Can't find search: No answer`
+        -  `Non-authoritative answer:`
+        -  `Name:   search`
+        -  `Address: 172.19.0.3`
+        -  `Name:   search`
+        -  `Address: 172.19.0.2`
+    -  **or**
+    -  `docker container run --rm  --net network_elasticsearch alpine nslookup search`
+5.  Run `centos curl -s search:9200` with `--net` multiple times until you see both "name" fields show
+    -  `docker container run --rm --network network_elasticsearch centos curl -s search:9200`
+    -  **or** use `--net` instead of `--network`    
+```json
+{
+  "name" : "Thunderball",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "xaUroCScQAi0TJX_04inKQ",
+  "version" : {
+    "number" : "2.4.6",
+    "build_hash" : "5376dca9f70f3abef96a77f4bb22720ace8240fd",
+    "build_timestamp" : "2017-07-18T12:17:44Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.4"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+
                 
