@@ -385,4 +385,34 @@ We can have multiple containers on a created network respond to the same DNS add
 -  much faster
 -  least frequently modified code must be on the top of Dockerfile
 
+#####  42. Building Images: Extending Official Images
+
+-  [view Dockerfile](https://github.com/artshishkin/art-docker-mastery-from-captain/blob/main/Section%204%20-%20Container%20Images/dockerfile-sample-2/Dockerfile)
+-  `WORKDIR` - is equivalent to `cd ..` but best practice is to use WORKDIR
+-  `COPY` - copy source code from your local machine into your container image
+-  `docker image build -t nginx-with-html .`
+```
+[+] Building 0.7s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                            0.0s
+ => => transferring dockerfile: 461B                                                                            0.0s
+ => [internal] load .dockerignore                                                                               0.0s
+ => => transferring context: 2B                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/nginx:latest                                                 0.0s
+ => [1/3] FROM docker.io/library/nginx:latest                                                                   0.3s
+ => => resolve docker.io/library/nginx:latest                                                                   0.0s
+ => [internal] load build context                                                                               0.1s
+ => => transferring context: 301B                                                                               0.0s
+ => [2/3] WORKDIR /usr/share/nginx/html                                                                         0.1s
+ => [3/3] COPY index.html index.html                                                                            0.1s
+ => exporting to image                                                                                          0.1s
+ => => exporting layers                                                                                         0.1s
+ => => writing image sha256:248d9905c7e82d4bbfe1fdd7476ab476ae6e31024c4bae669b14866a81f7b831                    0.0s
+ => => naming to docker.io/library/nginx-with-html                                                              0.0s
+```
+-  `docker container run --rm -p 80:80 nginx-with-html`
+-  retag image
+    -  `docker image tag nginx-with-html:latest artarkatesoft/nginx-with-html:latest`
+
+
+
 
