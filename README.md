@@ -320,4 +320,69 @@ We can have multiple containers on a created network respond to the same DNS add
 -  `EXPOSE` - expose these ports on the docker virtual network
 -  `CMD`
     -  required: run this command when container is launched
-    -  only one CMD allowed, so if there are multiple, last one wins                       
+    -  only one CMD allowed, so if there are multiple, last one wins
+    
+#####  41. Building Images: Running Docker Builds
+
+-  `docker image build --tag customnginx .` - we plan to use image locally so do not need to add organization `artarkatesoft`
+```
+[+] Building 28.6s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                            0.0s
+ => => transferring dockerfile: 2.56kB                                                                          0.0s
+ => [internal] load .dockerignore                                                                               0.1s
+ => => transferring context: 2B                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/debian:stretch-slim                                          2.9s
+ => [auth] library/debian:pull token for registry-1.docker.io                                                   0.0s
+ => [1/3] FROM docker.io/library/debian:stretch-slim@sha256:dc9e2a9aff7c145eebcd5ba3423225c22fbb75e0858f09a8bb  3.9s
+ => => resolve docker.io/library/debian:stretch-slim@sha256:dc9e2a9aff7c145eebcd5ba3423225c22fbb75e0858f09a8bb  0.0s
+ => => sha256:dc9e2a9aff7c145eebcd5ba3423225c22fbb75e0858f09a8bbeda7e016e62ad5 1.21kB / 1.21kB                  0.0s
+ => => sha256:ae46993e626d008bc0989aefc02bfb5e6759b5ce8c47e7cff9d44005450496b5 529B / 529B                      0.0s
+ => => sha256:546475075b6c1930114ded65aeb555911478b4b462f463d3c47297e9a5d01c7f 1.46kB / 1.46kB                  0.0s
+ => => sha256:8aff230071c97ddc86b6d29fbbb7a4caae7a0183a83f08aa5a06e69e26ce2c81 22.53MB / 22.53MB                2.5s
+ => => extracting sha256:8aff230071c97ddc86b6d29fbbb7a4caae7a0183a83f08aa5a06e69e26ce2c81                       1.2s
+ => [2/3] RUN apt-get update  && apt-get install --no-install-recommends --no-install-suggests -y gnupg1  &&   20.9s
+ => [3/3] RUN ln -sf /dev/stdout /var/log/nginx/access.log  && ln -sf /dev/stderr /var/log/nginx/error.log      0.5s
+ => exporting to image                                                                                          0.4s
+ => => exporting layers                                                                                         0.4s
+ => => writing image sha256:5a5e781c735406aacc708e2e42ea81136eb31f5dfe756dc958fb6b3a749eb9b1                    0.0s
+ => => naming to docker.io/library/customnginx                                                                  0.0s
+``` 
+-  if we run build one more time it will use cached layers
+-  `docker image build --tag customnginx2 .`
+```
+[+] Building 2.6s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                            0.0s
+ => => transferring dockerfile: 32B                                                                             0.0s
+ => [internal] load .dockerignore                                                                               0.1s
+ => => transferring context: 2B                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/debian:stretch-slim                                          2.4s
+ => [auth] library/debian:pull token for registry-1.docker.io                                                   0.0s
+ => [1/3] FROM docker.io/library/debian:stretch-slim@sha256:dc9e2a9aff7c145eebcd5ba3423225c22fbb75e0858f09a8bb  0.0s
+ => CACHED [2/3] RUN apt-get update  && apt-get install --no-install-recommends --no-install-suggests -y gnupg  0.0s
+ => CACHED [3/3] RUN ln -sf /dev/stdout /var/log/nginx/access.log  && ln -sf /dev/stderr /var/log/nginx/error.  0.0s
+ => exporting to image                                                                                          0.0s
+ => => exporting layers                                                                                         0.0s
+ => => writing image sha256:5a5e781c735406aacc708e2e42ea81136eb31f5dfe756dc958fb6b3a749eb9b1                    0.0s
+ => => naming to docker.io/library/customnginx2                                                                 0.0s
+```
+-  modify Dockerfile -> expose one more port 8080
+-  build again
+```
+[+] Building 1.6s (7/7) FINISHED
+ => [internal] load build definition from Dockerfile                                                            0.0s
+ => => transferring dockerfile: 2.57kB                                                                          0.0s
+ => [internal] load .dockerignore                                                                               0.0s
+ => => transferring context: 2B                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/debian:stretch-slim                                          1.5s
+ => [1/3] FROM docker.io/library/debian:stretch-slim@sha256:dc9e2a9aff7c145eebcd5ba3423225c22fbb75e0858f09a8bb  0.0s
+ => CACHED [2/3] RUN apt-get update  && apt-get install --no-install-recommends --no-install-suggests -y gnupg  0.0s
+ => CACHED [3/3] RUN ln -sf /dev/stdout /var/log/nginx/access.log  && ln -sf /dev/stderr /var/log/nginx/error.  0.0s
+ => exporting to image                                                                                          0.0s
+ => => exporting layers                                                                                         0.0s
+ => => writing image sha256:881a8231c84cded115fc987b5cf898a7113624a0926c4ff216d105620393770f                    0.0s
+ => => naming to docker.io/library/customnginx                                                                  0.0s
+```
+-  much faster
+-  least frequently modified code must be on the top of Dockerfile
+
+
