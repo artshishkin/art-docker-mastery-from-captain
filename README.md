@@ -174,4 +174,33 @@ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
     -  `docker container exec -it my_nginx ping new_nginx`
         -  `PING new_nginx (172.18.0.2): 56 data bytes`
         -  `64 bytes from 172.18.0.2: seq=0 ttl=64 time=2.889 ms`
+
+#####  31. Assignment: Using Containers for CLI Testing
+
+1.  Use different Linux distro containers to check `curl` cli tool version
+2.  Use two different terminal windows to start bash in both `centos:7` and `ubuntu:14.04`, using -it
+3.  Learn the `docker container --rm` option so you can save cleanup
+4.  Ensure `curl` is installed and on latest version for that distro
+    -  ubuntu: `apt-get update && apt-get install curl`
+    -  centos: `yum update curl`
+
+Solution
+-  for centos
+    -  `docker container run -it --rm centos:7`
+    -  `curl --version`
+        -  `curl 7.29.0 (x86_64-redhat-linux-gnu) libcurl/7.29.0 NSS/3.44 zlib/1.2.7 libidn/1.28 libssh2/1.8.0`
+    -  `yum update curl`
+    -  `curl --version`
+        -  `curl 7.29.0 (x86_64-redhat-linux-gnu) libcurl/7.29.0 NSS/3.53.1 zlib/1.2.7 libidn/1.28 libssh2/1.8.0`
+    -  `exit`
+    -  `docker ps -a` -> container absent
+    -  `docker image ls` -> present
+-  for ubuntu
+    -  `docker container run -it --rm ubuntu:14.04`
+    -  `curl --version`
+        -  `bash: curl: command not found`
+    -  `apt-get update && apt-get install curl`
+    -  `curl --version`    
+        -  `curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3`    
+
                 
