@@ -260,4 +260,53 @@ We can have multiple containers on a created network respond to the same DNS add
 -  This saves storage space on host and transfer time on push/pull
 -  A container is just a single read/write layer on top of image
 -  `docker image history` and `inspect` commands can teach us    
-                
+
+#####  39. Image Tagging and Pushing to Docker Hub
+
+1.  Tags 
+    -  `docker image tag --help`
+    -  `docker image ls` - no name column -> images do not have names technically
+    -  to address image we must have 3 peaces of info `<user>/<repo>:<tag>`
+    -  official images have no `<user>` part
+    -  `docker pull mysql/mysql-server`
+    -  TAG is not a version. It is like Git tag. It is a pointer to a specific image commit.
+    -  `docker pull nginx:mainline` -> already downloaded -> compare by image id
+        -  `mainline: Pulling from library/nginx`
+        -  `Digest: sha256:10b8cc432d56da8b61b070f4c7d2543a9ed17c2b23010b43af434fd40e2ca4aa`
+        -  `Status: Downloaded newer image for nginx:mainline`
+        -  `docker.io/library/nginx:mainline`
+2.  Create own tag of an image
+    -  `docker tag nginx artarkatesoft/nginx`
+    -  `docker image ls` -> view `artarkatesoft/nginx`    
+    -  `docker push artarkatesoft/nginx`
+        -  `Using default tag: latest`
+        -  `The push refers to repository [docker.io/artarkatesoft/nginx]`
+        -  `85fcec7ef3ef: Preparing`
+        -  `3e5288f7a70f: Preparing`
+        -  `56bc37de0858: Preparing`
+        -  `1c91bf69a08b: Preparing`
+        -  `cb42413394c4: Preparing`
+        -  `denied: requested access to the resource is denied`
+    -  Need to login
+3.  Login    
+    -  `docker login` -> enter username and pass
+    -  credentials are stored in filesystem so it is better to logout (if you do not trust working station (PC))
+    -  `docker logout`
+4.  Push image    
+    -  `docker push artarkatesoft/nginx` -> success
+        -  `latest: digest: sha256:0b159cd1ee1203dad901967ac55eee18c24da84ba3be384690304be93538bea8 size: 1362`
+5.  Give new tag to my tagged image
+    -  `docker tag artarkatesoft/nginx artarkatesoft/nginx:testing`
+    -  `docker push artarkatesoft/nginx:testing`
+        -  `The push refers to repository [docker.io/artarkatesoft/nginx]`
+        -  `85fcec7ef3ef: Layer already exists`
+        -  `3e5288f7a70f: Layer already exists`
+        -  `56bc37de0858: Layer already exists`
+        -  `1c91bf69a08b: Layer already exists`
+        -  `cb42413394c4: Layer already exists`
+        -  `testing: digest: sha256:0b159cd1ee1203dad901967ac55eee18c24da84ba3be384690304be93538bea8 size: 1362`
+    -  Awesome savings
+6.  Private repo
+    -  first create private repo
+    -  then push to it                 
+                        
