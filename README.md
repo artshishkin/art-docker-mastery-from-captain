@@ -469,5 +469,15 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 1679bdf89ec565460843b262845bde30a4480167b7acc026b26e24dd51f15556
 ```
 
+#####  45. Using Prune to Keep Your Docker System Clean (YouTube)
+
+-  `docker image prune` - to clean up just "dangling" images
+-  `docker image prune -a` - remove all images you're not using
+-  `docker system df` - to see space usage
+-  `docker system prune`
+-  [Docker tip: docker system prune and df](https://www.youtube.com/watch?v=_4QzP7uwtvI&feature=youtu.be)
+
+
+
 
 
