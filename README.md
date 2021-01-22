@@ -477,7 +477,54 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 -  `docker system prune`
 -  [Docker tip: docker system prune and df](https://www.youtube.com/watch?v=_4QzP7uwtvI&feature=youtu.be)
 
+####  Section 5: Container Lifetime & Persistent Data: Volumes, Volumes, Volumes
 
+#####  47. Persistent Data: Data Volumes
 
+1.  Volume is safe storage
+    -  `docker pull mysql`
+    -  `docker image inspect mysql`
+        -  `"Volumes": { "/var/lib/mysql": {} }`
+    -  `docker container run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql`
+    -  `docker container inspect mysql` -> Mounts section -> created volume
+    -  `docker container run -d --name mysql2 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql`
+    -  `docker container stop mysql mysql2`
+    -  `docker container rm mysql mysql2`
+    -  `docker volume ls` - 2 volumes are still there - data is safe
+2.  Named volume
+    -  `docker container run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true --volume /var/lib/mysql mysql`
+        -  `docker container inspect mysql` 
+            -  "Type": "volume",
+            -  "Name": "afc1a7b491d5c498a3f4ae3ecaf73cb577a91029bb92647954c26c68feed2329",
+            -  "Source": "/var/lib/docker/volumes/afc1a7b491d5c498a3f4ae3ecaf73cb577a91029bb92647954c26c68feed2329/_data",
+            -  "Destination": "/var/lib/mysql",
+    -  the same effect as VOLUME in Dockerfile
+    -  but we can use named volume
+    -  `docker container run -d --name mysql2 -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql`
+        -  `docker container inspect mysql2`
+        -  "Source": "/var/lib/docker/volumes/mysql-db/_data"
+        -  `docker volume ls` -> view `mysql-db`
+        -  `docker volume inspect mysql-db`
+3.  Mounting volume to another container
+    -  `docker container rm -f mysql mysql2`
+    -  `docker container run -d --name mysql_new -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql`
+    -  `docker container inspect mysql_new`
+    -  "Mounts":
+```json
+[
+    {
+        "Type": "volume",
+        "Name": "mysql-db",
+        "Source": "/var/lib/docker/volumes/mysql-db/_data",
+        "Destination": "/var/lib/mysql",
+        "Driver": "local",
+        "Mode": "z",
+        "RW": true,
+        "Propagation": ""
+    }
+]
+```         
+        
+        
 
 
