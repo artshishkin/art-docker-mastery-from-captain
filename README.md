@@ -559,3 +559,17 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 5.  Create a new `postgres` container with same named volume using 9.6.2
     -  `docker container run --name postgres2 -e POSTGRES_PASSWORD=mysecretpassword -v psql-data:/var/lib/postgresql/data postgres:9.6.2`
 6.  Check logs to validate
+
+#####  52. Assignment: Edit Code Running In Containers With Bind Mounts
+
+1.  Use a Jekill "Static Site Generator" to start a local web server
+2.  Don't have to be web developer: this is example of bridging the gap between local file access and apps running in containers
+3.  Source code is in the course repo under `bindmount-sample-1`
+4.  We edit files with editor on our host using native tools
+5.  Container detects changes with host files and updates web server
+6.  Start container with `docker run -p 80:4000 -v $(pwd):/site bretfisher/jekyll-serve`
+    -  `docker run -p 80:4000 -v ${pwd}:/site bretfisher/jekyll-serve` - for PowerShell
+7.  Refresh our browser to see changes
+8.  Change the file in `_post\` and refresh browser to see changes  
+
+
