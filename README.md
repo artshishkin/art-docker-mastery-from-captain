@@ -413,6 +413,61 @@ We can have multiple containers on a created network respond to the same DNS add
 -  retag image
     -  `docker image tag nginx-with-html:latest artarkatesoft/nginx-with-html:latest`
 
+#####  43. Assignment: Build Your Own Dockerfile and Run Containers From It
+
+1.  Dockerfiles are part process workflow and part art
+2.  Take existing Node.js app and Dockerize it
+3.  Make Dockerfile. Build it. Test it. Push it. (rm it). Run it.
+4.  Expect this to be iterative. Rarely do I get it right the first time.
+5.  Details in `dockerfile-assignment-1/Dockerfile`
+6.  Use the Alpine version of the official `node` 6.x image
+7.  Expected result is web site at `http://localhost`
+8.  Tag and push to your Docker Hub account (free)
+9.  Remove your image from local cache, run again from Hub
+
+```dockerfile
+FROM node:6-alpine
+
+RUN apk add --update tini
+
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
+
+COPY package.json package.json
+
+RUN npm install \
+&& npm cache clean --force
+
+COPY . .
+
+EXPOSE 3000
+
+CMD [ "/sbin/tini", "--", "node", "./bin/www" ]
+```  
+-  `docker image build -t artarkatesoft/dockerfile-assignment .`
+-  `docker container run -d -p 80:3000 artarkatesoft/dockerfile-assignment`
+-  localhost -> `It Worked! You Deserve The Captain's Applause`
+-  `docker image push artarkatesoft/dockerfile-assignment`
+-  `docker container rm -f 7bdc16f136851c7f1dccc9d03fb2ab613dedd11c741298655322c996e37474fd`
+-  `docker image rm artarkatesoft/dockerfile-assignment`
+-  `docker container run -d -p 80:3000 artarkatesoft/dockerfile-assignment`
+```
+Unable to find image 'artarkatesoft/dockerfile-assignment:latest' locally
+latest: Pulling from artarkatesoft/dockerfile-assignment
+bdf0201b3a05: Already exists
+e9fa13fdf0f5: Already exists
+ccc877228d8f: Already exists
+d85e9e571601: Already exists
+a4495a2acb1b: Already exists
+4f4fb700ef54: Already exists
+8edb120106d3: Already exists
+537bd9388d9f: Already exists
+0f4334ee17b6: Already exists
+Digest: sha256:9eb7a1a4d237aedeb44b127e86cf85c1422c57c0c6903df4187249ba1016e99e
+Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
+1679bdf89ec565460843b262845bde30a4480167b7acc026b26e24dd51f15556
+```
 
 
 
