@@ -572,4 +572,8 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 7.  Refresh our browser to see changes
 8.  Change the file in `_post\` and refresh browser to see changes  
 
+####  Section 6: Making It Easier with Docker Compose: The Multi-Container Tool
 
+#####  55. Docker Compose and The docker-compose.yml File
+
+-  view `compose-sample-1` directory
