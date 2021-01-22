@@ -546,5 +546,16 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 5.  Delete file in container
     -  `docker container exec -it nginx_with_volume bash`
     -  `rm /usr/share/nginx/html/testfile.txt` -> it will delete this file from host TOO   
-                
 
+#####  50. Assignment: Database Upgrades with Named Volumes                
+
+1.  Database upgrade with containers
+2.  Create a `postgres` container with named volume `psql-data` using version 9.6.1
+    -  `docker container run --name postgres1 -e POSTGRES_PASSWORD=mysecretpassword -v psql-data:/var/lib/postgresql/data postgres:9.6.1`
+3.  Use Docker Hub to learn `VOLUME` path and versions needed to run it
+    -  `/var/lib/postgresql/data`
+4.  Check logs, stop container
+    -  `docker container rm -f postgres1`
+5.  Create a new `postgres` container with same named volume using 9.6.2
+    -  `docker container run --name postgres2 -e POSTGRES_PASSWORD=mysecretpassword -v psql-data:/var/lib/postgresql/data postgres:9.6.2`
+6.  Check logs to validate
