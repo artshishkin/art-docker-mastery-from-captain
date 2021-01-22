@@ -524,7 +524,27 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
     }
 ]
 ```         
-        
-        
 
+#####  49. Persistent Data: Bind Mounting        
+
+1.  Mount directory to container        
+    -  [view Dockerfile](https://github.com/artshishkin/art-docker-mastery-from-captain/blob/main/Section%204%20-%20Container%20Images/dockerfile-sample-2/Dockerfile)
+    -  WORKDIR - `/usr/share/nginx/html` - where to locate `index.html`
+    -  from `dockerfile-sample-2` directory run
+    -  `docker run --rm --name nginx_with_volume -p 80:80 -v ${pwd}:/usr/share/nginx/html nginx`
+    -  `curl localhost` (from another shell) -> OK
+2.  View directory from inside container
+    -  `docker container exec -it nginx_with_volume bash`
+    -  `ls /usr/share/nginx/html` ->
+        -  we see Dockerfile and index.html -> we mounted host directory
+3.  Modify index.html file
+    -  view changes immediately
+    -  curl localhost
+4.  Create a new file in the same directory
+    -  `echo "hello from new file" >> testfile.txt`
+    -  localhost/testfile.txt -> view it in browser
+5.  Delete file in container
+    -  `docker container exec -it nginx_with_volume bash`
+    -  `rm /usr/share/nginx/html/testfile.txt` -> it will delete this file from host TOO   
+                
 
