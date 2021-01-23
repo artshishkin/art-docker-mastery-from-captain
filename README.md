@@ -577,3 +577,34 @@ Status: Downloaded newer image for artarkatesoft/dockerfile-assignment:latest
 #####  55. Docker Compose and The docker-compose.yml File
 
 -  view `compose-sample-1` directory
+
+#####  56. Trying Out Basic Compose Commands
+
+-  `compose-sample-2` directory
+-  view `docker-compose.yml`
+    -  2 containers (services):
+    -  nginx as proxy
+    -  httpd as web server
+-  run `docker-compose up`
+```
+Creating compose-sample-2_web_1   ... done
+Creating compose-sample-2_proxy_1 ... done
+Attaching to compose-sample-2_web_1, compose-sample-2_proxy_1
+```
+-  browse `localhost`
+```
+proxy_1  | 172.20.0.1 - - [22/Jan/2021:13:52:40 +0000] "GET / HTTP/1.1" 200 45 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" "-"
+web_1    | 172.20.0.3 - - [22/Jan/2021:13:52:40 +0000] "GET / HTTP/1.0" 200 45
+```
+-  stop running compose
+```
+Gracefully stopping... (press Ctrl+C again to force)
+Stopping compose-sample-2_proxy_1 ... done
+Stopping compose-sample-2_web_1   ... done
+```    
+-  `docker-compose up -d` - detached
+-  `docker-compose logs`
+-  `docker-compose --help`
+-  `docker-compose ps` - file `docker-compose.yml` must be in the same directory (or specify through `-f`)
+-  `docker-compose top` - list processes inside containers
+-  `docker-compose down` - Stop and remove containers, networks, images, and volumes
