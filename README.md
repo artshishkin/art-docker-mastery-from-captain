@@ -608,3 +608,27 @@ Stopping compose-sample-2_web_1   ... done
 -  `docker-compose ps` - file `docker-compose.yml` must be in the same directory (or specify through `-f`)
 -  `docker-compose top` - list processes inside containers
 -  `docker-compose down` - Stop and remove containers, networks, images, and volumes
+
+#### 57. Assignment: Build a Compose File For a Multi-Container Service
+
+1.  Build a basic compose file for a Drupal content management system website. Docker Hub is your friend
+2.  Use the `drupal` image along with the `postgres` image
+    -  Use the `drupal:8.8.2` image along with the `postgres:12.1` image
+    -  `services:` 
+    -  `server_db: image: postgres:12.1`
+    -  `cms: image: drupal:8.8.2`
+3.  Use `ports` to expose Drupal on 8080 so you can `localhost:8080`
+4.  Be sure to set `POSTGRES_PASSWORD` for postgres
+5.  Walk through Drupal setup via browser
+6.  Tip: Drupal assumes DB is localhost, but it's service name
+    -  Advanced settings: 
+        -  Host: `server_db` 
+7.  Extra Credit: Use volumes to store Drupal unique data
+    -  set volumes for drupal (4 in example)
+        -  drupal-modules:/var/www/html/modules
+        -  drupal-profiles:/var/www/html/profiles
+        -  drupal-sites:/var/www/html/sites
+        -  drupal-themes:/var/www/html/themes
+8.  Cleanup
+    -  `docker-compose down --help`
+    -  `docker-compose down -v`
