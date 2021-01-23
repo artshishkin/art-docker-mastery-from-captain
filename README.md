@@ -728,5 +728,81 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker container ls` -> containers are still there
     -  wait some time
     -  `docker container ls` -> containers are gone
-                      
+
+#####  66. Creating a 3-Node Swarm Cluster
+
+1.  Use `play-with-docker.com
+    -  visit [play-with-docker.com](https://play-with-docker.com/)
+    -  login with Docker
+    -  start 3 instances
+2.  Use `docker-machine` and VirtualBox
+    -  `docker-machine create node1`
+    -  `docker-machine ssh node1` - ssh into it
+    -  `docker info` -> `exit`
+    -  `docker-machine env node1`
+        -  export DOCKER_TLS_VERIFY="1"
+        -  export DOCKER_HOST="tcp://192.168.99.100:2376"
+        -  export DOCKER_CERT_PATH="C:\Users\Admin\.docker\machine\machines\node1"
+        -  export DOCKER_MACHINE_NAME="node1"
+        -  export COMPOSE_CONVERT_WINDOWS_PATHS="true"
+        -  # Run this command to configure your shell:
+        -  # eval $("C:\Users\Admin\bin\docker-machine.exe" env node1)
+    -  `eval $("C:\Users\Admin\bin\docker-machine.exe" env node1)` to configure shell (I used Git Bash)
+    -  `docker info` from configured shell
+        -  CPUs: 1
+        -  Total Memory: 985.4MiB
+        -  Name: node1
+3.  Use VPC like Digital Ocean
+    -  start 3 servers
+    -  install docker
+4.  Roll your own
+    -  on-Prem
+    -  AWS, DO, Azure, Google, etc
+    -  Install docker anywhere with `get.docker.com`
+5.  [Docker Swarm Firewall Ports](https://www.bretfisher.com/docker-swarm-firewall-ports/)
+6.  Configure `node1`
+    -  `docker swarm init`
+    -  Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses on different interfaces (172.18.0.42 on eth1 and 192.168.0.18 on eth0) - specify one with --advertise-addr                
+    -  `docker swarm init --advertise-addr 192.168.0.18`
+        -  Swarm initialized: current node (4m6xc350el74mfjjrbh1wmphn) is now a manager.
+        -  To add a worker to this swarm, run the following command:
+            -  `docker swarm join --token SWMTKN-1-3a5bidy6xaex050cjxccgko9ucks9a7nwcriw4co3f035c28oh-afoluulbkl5f2i3j4lb31u8xb 192.168.0.18:2377`
+        -  To add a manager to this swarm, run `docker swarm join-token manager` and follow the instructions.        
+7.  Configure `node2` as worker
+    -  `docker swarm join --token SWMTKN-1-3a5bidy6xaex050cjxccgko9ucks9a7nwcriw4co3f035c28oh-afoluulbkl5f2i3j4lb31u8xb 192.168.0.18:2377`
+        -  This node joined a swarm as a worker.
+    -  `docker node ls`
+        -  Error response from daemon: This node is not a swarm manager. Worker nodes can't be used to view or modify cluster state. Please run this command on a manager node or promote the current node to a manager.       
+    -  node1 -> `docker node ls`
+        -  ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+        -  4m6xc350el74mfjjrbh1wmphn *   node1      Ready     Active         Leader           20.10.0
+        -  invvp2s8kklsrct0rjglv2cum     node2      Ready     Active                          20.10.0                                   
+8.  Migrate `node2` to manager mode
+    -  node1 (manager) -> `docker node update --role manager node2`
+    -  node1 -> `docker node ls`
+        -  ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+        -  4m6xc350el74mfjjrbh1wmphn *   node1      Ready     Active         Leader           20.10.0
+        -  invvp2s8kklsrct0rjglv2cum     node2      Ready     Active         Reachable        20.10.0
+    -  node2 -> `docker node ls`
+        -  ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+        -  4m6xc350el74mfjjrbh1wmphn     node1      Ready     Active         Leader           20.10.0
+        -  invvp2s8kklsrct0rjglv2cum *   node2      Ready     Active         Reachable        20.10.0        
+    -  Leader is node1 still
+    -  node2 became Reachable
+    -  Star (*) shows current node
+9.  Configure node3 as manager by default
+    -  node1 -> `docker swarm join-token manager`
+    -  node3 ->
+        -  `docker swarm join --token SWMTKN-1-3a5bidy6xaex050cjxccgko9ucks9a7nwcriw4co3f035c28oh-8kgpg6d7hnwemvkr0k8ojy5fr 192.168.0.18:2377`    
+        -  This node joined a swarm as a manager.
+10.  Create service with 3 replicas
+    -  `docker service create  --replicas 3 alpine ping 8.8.8.8`
+    -  `docker service ls`
+        -  ID             NAME              MODE         REPLICAS   IMAGE           PORTS
+        -  vhhtofi7t2ee   awesome_mcnulty   replicated   **3/3**        alpine:latest   
+    -  node1 -> `docker node ps` -> containers that run on current node
+        -  ID             NAME                IMAGE           NODE      DESIRED STATE   CURRENT STATE           ERROR     PORTS
+        -  nslsbtohd5u2   awesome_mcnulty.1   alpine:latest   node1     Running         Running 2 minutes ago         
+    -  node1 -> `docker node ps node2` -> containers on specified node
+    -  `docker service ps awesome_mcnulty` - to view all node<->container info
                                         
