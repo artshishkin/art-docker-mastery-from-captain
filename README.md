@@ -651,3 +651,13 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker-compose down --help` -> `--rmi`
     -  `docker-compose down --rmi local` - removes image `compose-sample-3_proxy` too 
 
+##### 60. Assignment: Compose For Run-Time Image Building and Multi-Container Development
+
+1.  "Building custom `drupal` image for local testing"
+2.  Compose isn't just for developers. Tesing apps is easy/fun!
+3.  Maybe you are learning Drupal admin, or are a software tester
+4.  Start with Compose file from previous assignment
+5.  Make your `Dockerfile` and `docker-compose.yml` in dir `compose-assignment-2`
+6.  Use the `drupal` image along with the `postgres` image as before
+7.  Use `README.md` in that dir for details
+
