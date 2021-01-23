@@ -632,3 +632,22 @@ Stopping compose-sample-2_web_1   ... done
 8.  Cleanup
     -  `docker-compose down --help`
     -  `docker-compose down -v`
+
+#####  59. Adding Image Building to Compose Files
+
+1.  View `compose-sample-3` directory
+2.  First `docker-compose` will look for `compose-sample-3_proxy`
+    -  if it does not find it will build it
+    -  `build:`
+        -  `context: .`
+        -  `dockerfile: nginx.Dockerfile`
+3.  Browse `localhost`
+4.  Modify `index.html` -> update page in browser
+5.  Stop execution -> `Ctrl+C`
+6.  Clean
+    -  `docker-compose down` - by default it down not delete image `compose-sample-3_proxy`
+    -  `docker image ls` - `compose-sample-3_proxy` is present
+    -  `docker-compose up` - it founds cached image and does not build it
+    -  `docker-compose down --help` -> `--rmi`
+    -  `docker-compose down --rmi local` - removes image `compose-sample-3_proxy` too 
+
