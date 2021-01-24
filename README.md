@@ -954,4 +954,39 @@ Stopping compose-sample-2_web_1   ... done
 12.  Cleanup
     -  terminate all instances
 
+####  Section 8: Swarm Basic Features and How to Use Them In Your Workflow
+
+#####  67. Scaling Out with Overlay Networking
+
+1.  Create network
+    -  `docker network create --driver overlay mydrupal_net`
+    -  `docker network ls`
+        -  NETWORK ID     NAME                    DRIVER    SCOPE
+        -  o82yo09qk9y5   ingress                 overlay   swarm
+        -  3e397442a1fa   my_app_net              bridge    local
+        -  ho1d8c0u59ku   mydrupal_net            overlay   swarm
+2.  Start services
+    -  `docker service create --name psql --network mydrupal_net -e POSTGRES_PASSWORD=mypass -d postgres`
+    -  `docker service create --name drupal --network mydrupal_net -p 80:80 -d drupal`
+    -  `watch docker service ls` - in Ubuntu `watch` command to run command repeatedly every 2 s
+    -  `docker service ps drupal` -> on Node 2
+    -  `docker service ps psql` -> on Node 1
+3.  Configure Drupal
+    -  database: host name -> instead of `localhost` set `psql`
+4.  Visit site
+    -  `http://192.168.1.41` [http://art](http://art)     
+    -  `http://192.168.1.98` [http://farm01](http://farm01)
+    -  every node shows site
+    -  but `drupal` service is running on `art` machine
+    -  **or** the same in VirtualBox
+    -  `docker info`
+        -  Manager Addresses:
+        -  192.168.99.100:2377
+        -  192.168.99.101:2377
+        -  192.168.99.102:2377
+    -  http://192.168.99.100/ ..101/ ..102/
+    -  `docker node inspect node1` -> view IP
+
+        
+
                                                                                       
