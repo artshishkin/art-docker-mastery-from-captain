@@ -880,4 +880,78 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker node ls`
     -  `docker service create --replicas 2 alpine ping 8.8.8.8`
     -  `docker service rm dazzling_goldberg`
+
+#####  Create 3-Node Swarm Cluster On AWS
+
+1.  Create EC2 instance (FAIL)
+    -  EC2 console -> Create instance
+    -  Amazon Linux
+    -  UserData: `UserData1.sh`
+    -  Security group
+        -  Name: `docker-swarm-cluster`
+        -  Description: Security group for Docker Swarm Cluster        
+    -  Create
+    -  SSH to it -> `docker info` -> fail
+    -  `curl -fsSL https://get.docker.com -o get-docker.sh`
+    -  `sh get-docker.sh` ->
+        -  `ERROR: Unsupported distribution 'amzn'`
+2.  Create EC2 instance (SUCCESS)
+    -  UserData: `UserData2.sh`
+3.  Create node2 and node3
+    -  choose `node1` -> Actions -> Images and templates ->
+    -  Launch more like this
+    -  Edit Tags: 
+        -  Name: `node2` and `node3`
+4.  Modify Security group
+    -  Add Inbound Rule:
+        -  TCP -> Port 2377 -> From Security Group `docker-swarm-cluster`
+5.  Create Swarm cluster
+    -  ssh to node1
+    -  `docker info`
+    -  `docker swarm init`
+    -  `docker swarm join-token manager`
+        -  `docker swarm join --token SWMTKN-1-0ir23d5rvatr1v12f5kvc57aoq03unc8je5g6eicibc9kqvqed-ac9aye0d251rirhgb3yec0kvs 172.31.39.69:2377`
+6.  Connect node2 and node3 to cluster
+    -  ssh to node2 and node3
+    -  `docker swarm join --token SWMTKN-1-0ir23d5rvatr1v12f5kvc57aoq03unc8je5g6eicibc9kqvqed-ac9aye0d251rirhgb3yec0kvs 172.31.39.69:2377`
+    -  exit
+7.  Create service 
+    -  `docker service create ---replicas 3 alpine ping 8.8.8.8`
+8.  Playing
+    -  stop 1 EC2
+    -  start 1 EC2 -> swarm does not start instance of service on it    
+    -  `docker service scale vibrant_bardeen=4` -> add one to free swarm node         
+    -  `docker service scale vibrant_bardeen=3` -> scale in
+    -  `docker service ps vibrant_bardeen` -> every node has 1 service instance running 
+9.  Down 2 of 3 EC2s
+    -  `docker service ls` and `docker node ls` responds with **error** message
+    -  `Error response from daemon: rpc error: code = Unknown desc = The swarm does not have a leader. It's possible that too few managers are online. Make sure more than half of the managers are online.`            
+10.  Modify UserData to start managers without ssh to them
+    -  terminate node2 and node3
+    -  node1 -> `docker swarm init`
+        -  Error response from daemon: This node is already part of a swarm. Use "docker swarm leave" to leave this swarm and join another one.
+    -  `docker swarm leave`
+        -  Error response from daemon: You are attempting to leave the swarm on a node that is participating as a manager. The only way to restore a swarm that has lost consensus is to reinitialize it with `--force-new-cluster`. Use `--force` to suppress this message.
+    -  `docker swarm init --force-new-cluster`
+        -  Swarm initialized: current node (ocfilmjlv5gs6tin3j8blwghm) is now a manager.
+    -  `docker node ls` -> all 3 nodes are present??
+    -  `docker node rm dq88nbt003frw1s98koakehrg`
+    -  `docker node rm w03vckbq99igfe04fd5y664rp`
+    -  `docker swarm join-token manager`
+        -  `docker swarm join --token SWMTKN-1-0ir23d5rvatr1v12f5kvc57aoq03unc8je5g6eicibc9kqvqed-ac9aye0d251rirhgb3yec0kvs 172.31.39.69:2377`        
+    -  insert this command into UserData (UserData3.sh)
+    -  node1 -> Create more like this
+        -  modify UserData -> node2 and node3
+    -  `docker service ps -f "desired-state=running" vibrant_bardeen` -> all 3 in node1
+    -  `docker service scale vibrant_bardeen=5`
+    -  `docker service scale vibrant_bardeen=3`
+    -  `docker service ps -f "desired-state=running" vibrant_bardeen` -> every instance on own node
+11.  Launch instances from template
+    -  create template from instance `node1` -> DockerSwarmSecondaryManager
+    -  Launch Templates
+        -  DockerSwarmSecondaryManager
+        -  Launch instance from template -> 3 instances
+12.  Cleanup
+    -  terminate all instances
+
                                                                                       
