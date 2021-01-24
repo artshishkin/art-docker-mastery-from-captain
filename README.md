@@ -805,4 +805,53 @@ Stopping compose-sample-2_web_1   ... done
         -  nslsbtohd5u2   awesome_mcnulty.1   alpine:latest   node1     Running         Running 2 minutes ago         
     -  node1 -> `docker node ps node2` -> containers on specified node
     -  `docker service ps awesome_mcnulty` - to view all node<->container info
-                                        
+
+#####  Create 3-Node Swarm Cluster OnPrem (Using VirtualBox)
+
+1.  Create node1
+    -  `docker-machine create node1`
+    -  `docker-machine ssh node1` - ssh into it
+    -  `docker info` -> `exit`
+    -  `docker-machine env node1`
+        -  export DOCKER_TLS_VERIFY="1"
+        -  export DOCKER_HOST="tcp://192.168.99.100:2376"
+        -  export DOCKER_CERT_PATH="C:\Users\Admin\.docker\machine\machines\node1"
+        -  export DOCKER_MACHINE_NAME="node1"
+        -  export COMPOSE_CONVERT_WINDOWS_PATHS="true"
+        -  # Run this command to configure your shell:
+        -  # eval $("C:\Users\Admin\bin\docker-machine.exe" env node1)
+    -  `eval $("C:\Users\Admin\bin\docker-machine.exe" env node1)` - Git Bash
+    -  `docker info` from configured shell
+        -  CPUs: 1
+        -  Total Memory: 985.4MiB
+        -  Name: node1
+2.  Create node2
+    -  `docker-machine create node2`
+    -  `docker-machine env node2`
+        -  # Run this command to configure your shell:
+        -  # & "c:\Users\Admin\bin\docker-machine.exe" env node2 | Invoke-Expression
+    -  `docker-machine env node2 | Invoke-Expression` - in PowerShell
+3.  Create node3
+4.  Create swarm cluster
+    -  node1 -> `docker swarm init`
+5.  Add node2 to cluster
+    -  node1 -> `docker swarm join-token worker`
+        -  `docker swarm join --token SWMTKN-1-22qsiidysxn7f1crlhj9gtyhqi6fq80kvhxwtuumlqkpmui4ms-b8vy6weg9d99uz25nlq56th5l 192.168.99.100:2377`    
+        -  insert it in node2 shell
+    -  make node2 to be a manager 
+    -  node1 -> `docker node update --role manager node2`
+6.  Add node3 to cluster
+    -  node1 -> `docker swarm join-token manager` 
+        -  `docker swarm join --token SWMTKN-1-... 192.168.99.100:2377`
+    -  node3 -> `docker swarm join --token SWMTKN-1-... 192.168.99.100:2377`
+7.  Start service on Cluster
+    -  `docker service create --replicas 3 alpine ping 8.8.8.8`
+    -  `docker service ls`
+    -  `docker service ps funny_neumann`
+8.  Stop service
+    -  `docker service rm funny_neumann`
+9.  Stop machines
+    -  `docker-machine stop node1 node2 node3`
+    -  `docker-machine ls`       
+    
+                                                                   
