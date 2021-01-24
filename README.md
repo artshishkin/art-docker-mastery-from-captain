@@ -854,4 +854,30 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker-machine stop node1 node2 node3`
     -  `docker-machine ls`       
     
-                                                                   
+#####  Create 3-Node Swarm Cluster OnPrem (home machines)
+
+1.  Install Ubuntu
+2.  Enable SSH
+    -  `sudo apt update`
+    -  `sudo apt install openssh-server`
+3.  Install Docker
+    -  ssh to machine
+    -  `curl -fsSL https://get.docker.com -o get-docker.sh`
+    -  `sh get-docker.sh`
+    -  `docker info`
+    -  Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.24/version: dial unix /var/run/docker.sock: connect: permission denied
+    -  **but**
+    -  `sudo docker info` -> OK    
+    -  `sudo usermod -aG docker ${USER}`
+    -  logout -> login
+    -  `docker info` -> OK
+    -  `docker run hello-world`
+4.  Start first node
+    -  `docker swarm init`
+    -  `docker swarm join-token manager`
+5.  Start second node on another machine
+    -  `docker swarm join --token SWMTKN-1-4je4nhy62v1vumsfoe7snnrv41r3e2sptrsguq1epuadbbsqy5-f1c9lidzsozc8j0tfwl1ux2x6 192.168.1.98:2377`
+    -  `docker node ls`
+    -  `docker service create --replicas 2 alpine ping 8.8.8.8`
+    -  `docker service rm dazzling_goldberg`
+                                                                                      
