@@ -987,6 +987,16 @@ Stopping compose-sample-2_web_1   ... done
     -  http://192.168.99.100/ ..101/ ..102/
     -  `docker node inspect node1` -> view IP
 
+#####  68. Scaling Out with Routing Mesh 
+
+-  `docker service create --name search --replicas 3 -p 9200:9200 elasticsearch:2`
+-  `docker service ps search`
+-  `curl localhost:9200` - multiple times
+-  `curl 192.168.99.100:9200` - for VirtualBox cluster
+-  despite we curl the same IP all instances of `search` containers are invoked
+-  because of VIP (virtual IP) - stateless load balancer of Swarm
+
+
         
 
                                                                                       
