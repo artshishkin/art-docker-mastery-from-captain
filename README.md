@@ -1174,4 +1174,30 @@ Stopping compose-sample-2_web_1   ... done
     -  it is just for development
     -  works only with file-based secrets not the external   
     
+#####  78. Full App Lifecycle: Dev, Build and Deploy With a Single Compose Design
+
+1.  View content
+    -  `Section 9 - Swarm App Lifecycle\swarm-stack-3`
+2.  Development environment
+    -  from `Section 9 - Swarm App Lifecycle\swarm-stack-3` run
+    -  `docker-compose up -d`
+    -  will use `docker-compose.yml` + `docker-compose.override.yml`
+    -  `docker container inspect swarm-stack-3_drupal_1`
+        -  all 4 mounts are listed
+    -  `docker-compose down`
+3.  CI environment
+    -  `docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d`
+    -  order of `-f` files is important
+    -  `docker container inspect swarm-stack-3_drupal_1`
+        -  mounts are absent for testing environment
+    -  `docker-compose down`
+4.  Production approach
+    -  `docker-compose -f docker-compose.yml -f docker-compose.prod.yml config --help`
+    -  run this command somewhere in CI solution      
+    -  `docker-compose -f docker-compose.yml -f docker-compose.prod.yml config > output.yml`
+    -  in production use `output.yml` as compose file
+         
+                
+
+
                                                                                                   
