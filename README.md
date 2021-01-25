@@ -1075,6 +1075,30 @@ Stopping compose-sample-2_web_1   ... done
     -  `**http**://13.53.177.68/`
     -  `**http**://13.53.177.68:5001/`
                 
-   
+#####  71. Swarm Stacks and Production Grade Compose
 
+1.  Use `https://labs.play-with-docker.com/`
+2.  Copy `swarm-stack-1\example-voting-app-stack.yml`  to one of managers
+3.  Operate
+    -  `docker stack deploy -c example-voting-app-stack.yml voteapp`
+    -  `docker stack --help`
+    -  `docker stack ls` - 1 stack
+    -  `docker stack ps voteapp`
+    -  `docker stack services voteapp`
+    -  `docker network ls` -> 3 new networks are created
+        -  NETWORK ID     NAME               DRIVER    SCOPE
+        -  l5ivgttgovf7   voteapp_backend    overlay   swarm
+        -  u3c9sgydzu3l   voteapp_default    overlay   swarm
+        -  fl051s1bzk82   voteapp_frontend   overlay   swarm    
+4.  Browse
+    -  port 5000 -> `http://ip172-18-0-129-c079s8s34gag00bri970-5000.direct.labs.play-with-docker.com/` -> vote page
+    -  port 5001 -> `http://ip172-18-0-129-c079s8s34gag00bri970-5001.direct.labs.play-with-docker.com/` -> result page
+    -  port 8080 -> `http://ip172-18-0-129-c079s8s34gag00bri970-8080.direct.labs.play-with-docker.com/` -> visualizer
+5.  Modify stack compose file
+    -  `vim example-voting-app-stack.yml`
+    -  i
+    -  change replicas for `vote` service to 5
+    -  Esc -> :wq
+6.  Update stack
+    -  `docker stack deploy -c example-voting-app-stack.yml voteapp` - **deploy**          
                                                                                       
