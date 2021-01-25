@@ -1027,5 +1027,54 @@ Stopping compose-sample-2_web_1   ... done
         -  db.1.qeu48sixbmqg@node3    | ERROR:  duplicate key value violates unique constraint "votes_id_key"
         -  db.1.qeu48sixbmqg@node3    | DETAIL:  Key (id)=(6adcc644431a37d) already exists.
         -  db.1.qeu48sixbmqg@node3    | STATEMENT:  INSERT INTO votes (id, vote) VALUES ($1, $2)    
-    
+
+#####  69. Assignment: Create A Multi-Service Multi-Node Web App (Deploy to AWS)
+
+1.  Create Security group - `docker-swarm-cluster`
+
+| Type | Protocol | Port range | Source | Description - optional |
+| ---- | -------- | ---------- | ------ | ---------------------- |    
+| Custom TCP |	TCP	| 2377 |	sg-00771bcae2164c0b3 (docker-swarm-cluster) |	Docker Swarm 2377 port - for cluster management communications |
+| Custom UDP |	UDP	| 7946 |	sg-00771bcae2164c0b3 (docker-swarm-cluster) |  Docker Swarm UDP 7946 - for communication among nodes |
+| Custom TCP |	TCP	| 7946 |	sg-00771bcae2164c0b3 (docker-swarm-cluster) |	Docker Swarm TCP 7946 - for communication among nodes |
+| ESP (50)   |	ESP (50) |	All	| sg-00771bcae2164c0b3 (docker-swarm-cluster) |	IP Protocol 50 (ESP) if you plan on using overlay network with the encryption option |
+
+2.  Create security group - `DockerCaptainAssignmentGroup`
+
+| Type | Protocol | Port range | Source | Description - optional |
+| ---- | -------- | ---------- | ------ | ---------------------- |    
+| HTTP |	TCP |	80 |	0.0.0.0/0	| 80 |
+| HTTP |	TCP |	80 |	::/0	| 80 |
+| SSH |	TCP |	22 |	93.170.219.19/32	| - |
+| Custom TCP |	TCP |	5001 |	0.0.0.0/0	| 5001 |
+| Custom TCP |	TCP |	5001 |	::/0	| 5001  |
+
+3.  Create node1
+    -  launch instance from template `DockerSwarmSecondaryManager`
+    -  Name: node1
+    -  UserData: from `art_answer/UserDataLeader.sh`
+        -  **or** just modify template `docker swarm init`
+4.  Take join-token from leader
+    -  ssh to it
+    -  `docker swarm join-token manager`
+        -  `docker swarm join --token SWMTKN-1-1hsjejcgqjbcyvu5w91197q3o9mvu31p3gx9mmzn859ml4okmd-7yt423esvmbqjknssap5mzeut 172.31.39.248:2377`        
+5.  Create node2
+    -  launch instance from template `DockerSwarmSecondaryManager`
+    -  Name: node2
+    -  UserData: modify join token from step 4
+6.  Create node3
+    -  launch instance from template `DockerSwarmSecondaryManager`
+    -  Name: node3
+    -  UserData: 
+        -  modify join token from step 4
+        -  add code from `art_answer/solution.sh`
+7.  Monitor
+    -  from node1:
+    -  `watch docker servcie ls`    
+8.  Test
+    -  `**http**://13.53.177.68/`
+    -  `**http**://13.53.177.68:5001/`
+                
+   
+
                                                                                       
