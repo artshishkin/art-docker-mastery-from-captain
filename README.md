@@ -1197,7 +1197,14 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker-compose -f docker-compose.yml -f docker-compose.prod.yml config > output.yml`
     -  in production use `output.yml` as compose file
          
-                
+#####  79. Service Updates: Changing Things In Flight
+
+-  `docker service create --name web -p 8088:80 nginx:1.13.7`
+-  `docker service scale web=5` - scale out
+-  `docker service update --image nginx:1.13.6 web` - rolling update
+-  `docker service update --publish-rm 8088 --publish-add 9090:80 web` - modify port (first remove then add)
+-  `docker service update --force web` - Tip: to rebalance service
+-  `docker service rm web` - cleanup                  
 
 
                                                                                                   
