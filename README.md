@@ -1206,5 +1206,49 @@ Stopping compose-sample-2_web_1   ... done
 -  `docker service update --force web` - Tip: to rebalance service
 -  `docker service rm web` - cleanup                  
 
+#####  80. Healthchecks in Dockerfiles
+
+-  Healthcheck in `run` command
+    -  without healthcheck
+    -  `docker container run --name p1 -d -e POSTGRES_HOST_AUTH_METHOD=trust postgres`
+    -  with healthcheck
+    -  `docker container run --name p2 -d -e POSTGRES_HOST_AUTH_METHOD=trust --health-cmd="pg_isready -U postgres || exit 1"  postgres`
+    -  `docker container ls`
+        -  CONTAINER ID   IMAGE      COMMAND                  CREATED              STATUS                        PORTS      NAMES
+        -  2ad92f4a4076   postgres   "docker-entrypoint.s…"   About a minute ago   Up About a minute (healthy)   5432/tcp   p2
+        -  3ee62c2a03d8   postgres   "docker-entrypoint.s…"   7 minutes ago        Up 7 minutes                  5432/tcp   p1
+    -  `docker container inspect p2`    
+    -  `"Health"` section added: with 5 points repeated in 30 seconds
+-  Elasticsearch example
+    -  `docker container run -d --health-cmd="curl -f localhost:9200/_cluster/health || false" --health-interval=5s --health-retries=3 --health-timeout=2s --health-start-period=15s elasticsearch:2`     
+-  Health in service
+    -  `docker service create --name p3 -e POSTGRES_HOST_AUTH_METHOD=trust --health-cmd="pg_isready -U postgres || exit 1"  postgres`
+-  Health in Dockerfile
+    -  HEALTHCHECK section
+    -  view `Section 9 - Swarm App Lifecycle\healthchecks\Dockerfile`
+    -  `docker image build -t elacticsearch_health .`
+    -  `docker image inspect elacticsearch_health` -> present Healthcheck section
+    -  `docker image inspect elacticsearch_health | Select-String "Health"`
+    -  `docker image inspect --format "{{ .Config.Healthcheck }}" elacticsearch_health`- filter like JSONPath
+        -  `{[CMD-SHELL curl -f localhost:9200/_cluster/health || false] 5s 2s 30s 5}`
+    -  `docker image inspect --format "{{ json .Config.Healthcheck }}" elacticsearch_health`
+```json
+{
+  "Test":["CMD-SHELL","curl -f localhost:9200/_cluster/health || false"],
+  "Interval":5000000000,
+  "Timeout":2000000000,
+  "StartPeriod":30000000000,
+  "Retries":5
+}                 
+```    
+-  Health in Compose/Stack Files
+    -  view `docker-compose.yml`
+    -  `docker-compose up -d`
+    -  `docker container inspect healthchecks_my_elastic_1`
+        -  view 5 health statuses
+    -  both variants works well    
+        -  `test: ["CMD", "curl", "-f", "localhost:9200/_cluster/health"]`
+        -  `test: ["CMD-SHELL", "curl -f localhost:9200/_cluster/health || false"]` 
+
 
                                                                                                   

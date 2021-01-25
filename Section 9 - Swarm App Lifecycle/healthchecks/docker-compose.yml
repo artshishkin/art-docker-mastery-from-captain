@@ -1,0 +1,14 @@
+version: '2.1'
+
+# same as
+#  docker container run -d --health-cmd="curl -f localhost:9200/_cluster/health || false" --health-interval=5s --health-retries=3 --health-timeout=2s --health-start-period=15s elasticsearch:2
+services:
+  my_elastic:
+    image: elasticsearch:2
+    healthcheck:
+#      test: ["CMD", "curl", "-f", "localhost:9200/_cluster/health"]
+      test: ["CMD-SHELL", "curl -f localhost:9200/_cluster/health || false"]
+      interval: 5s
+      retries: 3
+      timeout: 2s
+#      start-period: 15s
