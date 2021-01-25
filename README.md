@@ -996,7 +996,36 @@ Stopping compose-sample-2_web_1   ... done
 -  despite we curl the same IP all instances of `search` containers are invoked
 -  because of VIP (virtual IP) - stateless load balancer of Swarm
 
+#####  69. Assignment: Create A Multi-Service Multi-Node Web App
 
-        
+-  Using Docker's Distributed Voting App
+-  Use `swarm-app-1` directory in our course repo for requirements
+-  1 volume, 2 networks and 5 services needed
+-  Create the commands needed, spin up services and test app
+-  Everything is using Docker Hub images, so no data needed on Swarm
+-  Like many computer things, this is 50% art and 50% science
 
+1.  Create networks
+    -  `backend` network:
+        -  `docker network create --driver overlay backend`
+    -  `frontend` network:
+        -  `docker network create --driver overlay frontend`
+2.  Create `db` service
+    -  `docker service create --name db  --network backend -e POSTGRES_HOST_AUTH_METHOD=trust --mount type=volume,source=db-data,target=/var/lib/postgresql/data postgres:9.4`        
+3.  Create `redis` service
+    -  `docker service create --name redis --network frontend redis:3.2`
+4.  Create `worker` service
+    -  ` docker service create --name worker --network frontend --network backend bretfisher/examplevotingapp_worker:java`    
+5.  Create `result` service
+    -  `docker service create --name result --network backend -p 5001:80 bretfisher/examplevotingapp_result`
+6.  Create `vote` service
+    -  `docker service create  --name vote --network frontend --replicas 3 -p 80:80 bretfisher/examplevotingapp_vote`
+7.  View all ok
+    -  `docker service ls` -> all 5 services
+    -  but buggy
+    -  `docker service logs db`
+        -  db.1.qeu48sixbmqg@node3    | ERROR:  duplicate key value violates unique constraint "votes_id_key"
+        -  db.1.qeu48sixbmqg@node3    | DETAIL:  Key (id)=(6adcc644431a37d) already exists.
+        -  db.1.qeu48sixbmqg@node3    | STATEMENT:  INSERT INTO votes (id, vote) VALUES ($1, $2)    
+    
                                                                                       
