@@ -1128,4 +1128,17 @@ Stopping compose-sample-2_web_1   ... done
 6.  View logs
     -  `docker service logs psql` -> all running ok      
 
-                                                                                      
+#####  74. Using Secrets with Swarm Stacks
+
+1.  Copy secret files to manager
+    -  `secret-sample2/psql_user.txt`                                                                                      
+    -  `secret-sample2/psql_password.txt`
+2.  Copy docker-compose file to manager
+3.  Create stack
+    -  `docker stack deploy -c docker-compose.yml mydb`
+4.  Remove stack
+    -  `docker stack rm mydb`
+    -  secrets are being removed too
+5.  Remark
+    -  this is ONLY for development and testing
+    -  do not use files to store secrets                                                                                              
