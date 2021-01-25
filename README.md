@@ -1141,4 +1141,21 @@ Stopping compose-sample-2_web_1   ... done
     -  secrets are being removed too
 5.  Remark
     -  this is ONLY for development and testing
-    -  do not use files to store secrets                                                                                              
+    -  do not use files to store secrets
+
+##### 75. Assignment: Create A Stack with Secrets and Deploy
+
+-  Let's use our Drupal compose file from last assignment
+    -  `compose-assignment-2`
+-  Rename image back to official `drupal:8.2`
+-  Remove `build:`
+-  Add secret via `external:`
+-  Use environment variable `POSTGRES_PASSWORD_FILE`
+-  Add secret via cli `echo "<pw>" | docker secret create psql-pw -`
+    -  `echo "art123" | docker secret create psql-pw -`
+-  Copy compose into a new yml file on you Swarm node1
+    -  `docker stack deploy -c docker-compose.yml drupal`     
+
+
+    
+                                                                                                  
