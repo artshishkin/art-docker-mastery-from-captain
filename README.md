@@ -1101,4 +1101,31 @@ Stopping compose-sample-2_web_1   ... done
     -  Esc -> :wq
 6.  Update stack
     -  `docker stack deploy -c example-voting-app-stack.yml voteapp` - **deploy**          
+
+#####  72. Secrets Storage for Swarm: Protecting Your Environment Variables
+
+#####  73. Using Secrets in Swarm Services
+
+1.  Pass secret using file
+    -  copy file `/secrets-sample-1/psql_user.txt` into manager
+    -  `docker secret create psql_user psql_user.txt`
+2.  Pass secret using STDIN
+    -  `echo "myDBpassWORD" | docker secret create psql_pass -` 
+3.  Inspect secrets
+    -  `docker secret ls`
+    -  `docker secret inspect psql_pass`
+4.  Start service with secrets
+    -  `docker service create --name psql --secret psql_user --secret psql_pass -e POSTGRES_PASSWORD_FILE=/run/secrets/psql_pass -e POSTGRES_USER_FILE=/run/secrets/psql_user postgres`    
+5.  Inspect service
+    -  `docker service inspect psql`
+    -  what's inside
+    -  `docker service ps psql` -> on the same node
+    -  `docker container exec -it psql.1.n1c59j4pb4dcx9vdbqyhsjxcw bash`
+    -  `ls /run/secrets/`
+    -  `root@fcc78e4f400b:/# cat /run/secrets/psql_pass` 
+    -  `myDBpassWORD`
+    -  `exit`
+6.  View logs
+    -  `docker service logs psql` -> all running ok      
+
                                                                                       
