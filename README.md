@@ -1156,6 +1156,22 @@ Stopping compose-sample-2_web_1   ... done
 -  Copy compose into a new yml file on you Swarm node1
     -  `docker stack deploy -c docker-compose.yml drupal`     
 
+####  Section 9: Swarm App Lifecycle
 
+#####  77. Using Secrets With Local Docker Compose
+
+-  cd to `Section 8 - Swarm Basic Features\secrets-sample-2\"`
+-  `docker node ls`
+    -  Error response from daemon: This node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again.
+    -  **no Swarm** running
+-  `docker-compose up -d`
+-  `docker-compose exec psql cat /run/secrets/psql_user`
+    -  response
+    -  `dbuser`
+    -  secret is there
+    -  docker-compose by the scene bind mount (`-v`) actual file on hard drive into the container
+    -  it is not secure and it is not suppose to be
+    -  it is just for development
+    -  works only with file-based secrets not the external   
     
                                                                                                   
