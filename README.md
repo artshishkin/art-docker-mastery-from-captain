@@ -1275,4 +1275,35 @@ Stopping compose-sample-2_web_1   ... done
     -  Build Logs
     -  Dockerfile
     -  Readme - absent
-5.  Add Readme file to the Dockerfile location                                                                                                          
+5.  Add Readme file to the Dockerfile location
+
+#####  84. Run a Private Docker Registry
+
+1.  Start registry
+    -  `docker container run -p 5000:5000 --name registry -d registry`
+2.  Push sample image to local registry
+    -  `docker pull hello-world`
+    -  `docker run hello-world`
+    -  `docker tag hello-world 127.0.0.1:5000/hello-world` - Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+    -  `docker push 127.0.0.1:5000/hello-world` -  push tagged image into local registry
+        -  Using default tag: latest
+        -  The push refers to repository [127.0.0.1:5000/hello-world]
+        -  9c27e219663c: Pushed
+        -  latest: digest: sha256:90659bf80b44ce6be8234e6ff90a1ac34acbeb826903b02cfa0da11c82cbc042 size: 525       
+3.  Remove images and container
+    -  `docker container remove `
+    -  `docker image rm hello-world`
+    -  `docker image rm 127.0.0.1:5000/hello-world` -> error container to remove
+    -  `docker container rm a15b6f246b5d`
+    -  `docker image rm 127.0.0.1:5000/hello-world`
+4.  Pulling image
+    -  `docker pull 127.0.0.1:5000/hello-world`
+    -  `docker image ls | Select-String "hello"`
+5.  Enable `registry` to persist images
+    -  `docker container rm -f registry`
+    -  `docker container run -p 5000:5000 --name registry -d -v ${pwd}/registry-data:/var/lib/registry registry`
+    -  `docker push 127.0.0.1:5000/hello-world`
+    -  `ls .\registry-data\` - present some data
+    -  `tree .` - view file tree         
+
+                                                                                                          
