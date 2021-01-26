@@ -1250,5 +1250,29 @@ Stopping compose-sample-2_web_1   ... done
         -  `test: ["CMD", "curl", "-f", "localhost:9200/_cluster/health"]`
         -  `test: ["CMD-SHELL", "curl -f localhost:9200/_cluster/health || false"]` 
 
+####  Section 10: Container Registries: Image Storage and Distribution
 
-                                                                                                  
+#####  82. Docker Hub: Digging Deeper
+
+1.  Link Account:
+    -  Account Settings -> Linked Accounts -> GitHub -> Connect
+2.  Notifications
+    -  Email -> Only failures
+3.  Autobuilds
+    -  `artarkatesoft/dockerfile-assignment`
+    -  Builds -> Link to GitHub
+    -  Build configurations:
+    -  SOURCE REPOSITORY: artshishkin/art-docker-mastery-from-captain
+    -  REPOSITORY LINKS: Enable for Base Image
+    -  Source Type: Branch
+    -  Source: main
+    -  Docker Tag: latest
+    -  Dockerfile location: Dockerfile
+    -  Build Context: `/Section 4 - Container Images/dockerfile-assignment-1`
+    -  Save and build
+4.  Builds
+    -  Success
+    -  Build Logs
+    -  Dockerfile
+    -  Readme - absent
+5.  Add Readme file to the Dockerfile location                                                                                                          
