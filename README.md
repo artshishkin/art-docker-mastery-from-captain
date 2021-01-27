@@ -1385,8 +1385,29 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker pull 127.0.0.1:5000/hello-world`
 Note. The open-source registry does not support the same authorization model as Docker Store or Docker Trusted Registry. Once you are logged in to the registry, you can push and pull from any repository, there is no restriction to limit specific users to specific repositories.    
 
+#####  86. Using Docker Registry With Swarm
 
-
-
+1.  Use [Play with Docker](https://labs.play-with-docker.com/) Swarm Cluster with 5 Managers
+2.  Start registry
+    -  `docker service create --name registry --publish 5000:5000 -d registry`
+    -  `docker service ps registry`
+3.  View registry through browser
+    -  `http://localhost:5000/v2/_catalog`
+        -  `{"repositories":["hello-world"]}` - I test locally (previously pushed image)
+    -  `http://ip172-18-0-63-c08s34434gag009vrjj0-5000.direct.labs.play-with-docker.com/v2/_catalog` - port 5000
+        -  `{"repositories":[]}` - repo is empty
+4.  Push repo into registry
+    -  we can push image from ANY node (not only from where registry started)
+    -  `docker image pull hello-world`
+    -  `docker tag hello-world 127.0.0.1:5000/hello-world`
+    -  `docker push 127.0.0.1:5000/hello-world`
+    -  `curl localhost:5000/v2/_catalog`
+        -  `{"repositories":["hello-world"]}`
+    -  do the same for `nginx`
+        -  `curl localhost:5000/v2/_catalog`
+        -  `{"repositories":["hello-world","nginx"]}`
+5.  Pull image from registry
+    -  `docker service create --name nginx -p 80:80 --replicas 5 --detach=false  127.0.0.1:5000/nginx`
+    -  `curl localhost` -> nginx default page        
 
                                                                                                                               
