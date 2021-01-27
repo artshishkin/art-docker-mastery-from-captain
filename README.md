@@ -1342,10 +1342,48 @@ Stopping compose-sample-2_web_1   ... done
     -  `docker push 127.0.0.1:5000/hello-world`
     -  `docker pull 127.0.0.1:5000/hello-world`
 
+######  Part 3 - Using Basic Authentication with a Secured Registry in Linux
 
-
-
-
+1.  Usernames and Passwords
+    -  Create the password file with an entry for user “moby” with password “gordon”:
+        -  `mkdir auth`
+        -  `docker run --entrypoint htpasswd registry:latest -Bbn moby gordon > auth/htpasswd`
+            -  got an error
+            -  `Error response from daemon: OCI runtime create failed: container_linux.go:370: starting container process caused: exec: "htpasswd": executable file not found in $PATH: unknown.`        
+        -  `docker run --entrypoint htpasswd registry:2.7.0 -Bbn moby gordon > auth/htpasswd`
+    -  We can verify the entries have been written by checking the file contents - which shows the user names in plain text and a cipher text password:
+        -  `cat auth/htpasswd`
+        -  `moby:$2y$05$qLJRhACnpODBbNWvuTEqSOv5eJALk2oESSjCEdhxJlqW/8jswTRC6`
+2.  Running an Authenticated Secure Registry
+    -  `docker kill registry`
+    -  `docker rm registry`
+    -  `docker run -d -p 5000:5000 --name registry \`
+    -  `  --restart unless-stopped \`
+    -  `  -v $(pwd)/registry-data:/var/lib/registry \`
+    -  `  -v $(pwd)/certs:/certs \`
+    -  `  -v $(pwd)/auth:/auth \`
+    -  `  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \`
+    -  `  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \`
+    -  `  -e REGISTRY_AUTH=htpasswd \`
+    -  `  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \`
+    -  `  -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" \`
+    -  `  registry`            
+3.  Authenticating with the Registry
+    -  With basic authentication, users cannot push or pull from the registry unless they are authenticated.
+    -  `docker pull 127.0.0.1:5000/hello-world`
+    -  Error response from daemon: Get http://127.0.0.1:5000/v2/: net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x15\x03\x01\x00\x02\x02"
+    -  `docker push 127.0.0.1:5000/hello-world`
+        -  The push refers to repository [127.0.0.1:5000/hello-world]
+        -  9c27e219663c: Preparing
+        -  no basic auth credentials                
+    -  `docker login 127.0.0.1:5000`
+        -  Username: moby
+        -  Password:WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+        -  Configure a credential helper to remove this warning. See
+        -  https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+        -  Login Succeeded    
+    -  `docker pull 127.0.0.1:5000/hello-world`
+Note. The open-source registry does not support the same authorization model as Docker Store or Docker Trusted Registry. Once you are logged in to the registry, you can push and pull from any repository, there is no restriction to limit specific users to specific repositories.    
 
 
 
