@@ -1306,4 +1306,49 @@ Stopping compose-sample-2_web_1   ... done
     -  `ls .\registry-data\` - present some data
     -  `tree .` - view file tree         
 
-                                                                                                          
+#####  Assignment: Secure Docker Registry With TLS and Authentication
+
+######  Part 2 - Running a Secured Registry Container in Linux
+
+1.  [Running a Secured Registry Container in Linux](https://training.play-with-docker.com/linux-registry-part2/)
+2.  Generating the SSL Certificate
+    -  `mkdir -p certs`
+    -  `openssl req -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key -x509 -days 365 -out certs/domain.crt` (Linux)
+        -  Country Name (2 letter code) [AU]:UA
+        -  State or Province Name (full name) [Some-State]:
+        -  Locality Name (eg, city) []:
+        -  Organization Name (eg, company) [Internet Widgits Pty Ltd]:Docker
+        -  Organizational Unit Name (eg, section) []:
+        -  Common Name (e.g. server FQDN or YOUR name) []:127.0.0.1
+        -  Email Address []:
+    -  To get the docker daemon to trust the certificate, copy the domain.crt file.
+        -  `mkdir /etc/docker/certs.d`
+        -  `mkdir /etc/docker/certs.d/127.0.0.1:5000` 
+        -  `cp $(pwd)/certs/domain.crt /etc/docker/certs.d/127.0.0.1:5000/ca.crt`
+    -  Make sure to restart the docker daemon.
+        -  `pkill dockerd`
+        -  `dockerd > /dev/null 2>&1 &`
+3.  Running the Registry Securely
+    -  `mkdir registry-data`
+    -  `docker run -d -p 5000:5000 --name registry \`
+    -  `  --restart unless-stopped \`
+    -  `  -v $(pwd)/registry-data:/var/lib/registry -v $(pwd)/certs:/certs \`
+    -  `  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \`
+    -  `  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \`
+    -  `  registry`
+4.  Accessing the Secure Registry
+    -  `docker pull hello-world`
+    -  `docker tag hello-world 127.0.0.1:5000/hello-world`
+    -  `docker push 127.0.0.1:5000/hello-world`
+    -  `docker pull 127.0.0.1:5000/hello-world`
+
+
+
+
+
+
+
+
+
+
+                                                                                                                              
