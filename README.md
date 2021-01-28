@@ -1410,4 +1410,69 @@ Note. The open-source registry does not support the same authorization model as 
     -  `docker service create --name nginx -p 80:80 --replicas 5 --detach=false  127.0.0.1:5000/nginx`
     -  `curl localhost` -> nginx default page        
 
-                                                                                                                              
+####  Section 13: Kubernetes Install And Your First Pods
+
+#####  100. Kubectl run, create, and apply
+
+#####  101. Our First Pod With kubectl run
+
+1.  Choose where to run
+    -  Docker Desktop
+    -  [play-with-k8s.com](https://labs.play-with-k8s.com/)
+    -  [katacoda.com](https://katacoda.com/courses/kubernetes/playground)
+2.  Test Kubernetes is working
+    -  `kubectl version` - must be client and server versions
+    -  [katacoda.com](https://katacoda.com/courses/kubernetes/playground)
+        -  Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.0", GitCommit:"9e991415386e4cf155a24b1da15becaa390438d8", GitTreeState:"clean", BuildDate:"2020-03-25T14:58:59Z", GoVersion:"go1.13.8", Compiler:"gc", Platform:"linux/amd64"}
+        -  Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.0", GitCommit:"9e991415386e4cf155a24b1da15becaa390438d8", GitTreeState:"clean", BuildDate:"2020-03-25T14:50:46Z", GoVersion:"go1.13.8", Compiler:"gc", Platform:"linux/amd64"}      
+    -  Docker Desktop
+        -  Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T12:50:19Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"windows/amd64"}
+        -  Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T12:41:49Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"linux/amd64"}     
+3.  Run a pod of the nginx web server
+    -  `kubectl run my-nginx --image nginx`
+4.  List the pod
+    -  `kubectl get pods` - from controlpane
+        -  NAME       READY   STATUS    RESTARTS   AGE
+        -  my-nginx   1/1     Running   0          9m28s        
+5.  List all objects
+    -  `kubectl get all`
+        -  NAME           READY   STATUS    RESTARTS   AGE
+        -  pod/my-nginx   1/1     Running   0          15m
+        -  NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        -  service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   30m
+6.  Cleanup
+    -  remove the deployment
+    -  `kubectl delete deployment my-nginx`
+        -  katacoda says
+        -  `Error from server (NotFound): deployments.apps "my-nginx" not found`    
+    -  I made
+    -  `kubectl delete pod my-nginx`
+7.  Since version 1.18 to create deployment you need to run
+    -  `kubectl create deployment my-nginx --image nginx` - for creating pod, replicaset, deployment
+    -  `kubectl get all`
+        -  NAME                           READY   STATUS    RESTARTS   AGE
+        -  pod/my-nginx-9b596c8c4-chtfx   1/1     Running   0          3m20s
+        -  NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        -  service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   4m10s
+        -  NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+        -  deployment.apps/my-nginx   1/1     1            1           3m20s
+        -  NAME                                 DESIRED   CURRENT   READY   AGE
+        -  replicaset.apps/my-nginx-9b596c8c4   1         1         1       3m20s    
+8.  Cleanup 
+    -  `kubectl delete deployment my-nginx`
+        -  deployment.apps "my-nginx" deleted
+    -  `kubectl get all`
+        -  NAME                           READY   STATUS        RESTARTS   AGE
+        -  pod/my-nginx-9b596c8c4-chtfx   0/1     Terminating   0          5m31s
+        -  NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+        -  service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6m21s
+
+
+
+
+
+
+
+    
+    
+                                                                                                                                   
