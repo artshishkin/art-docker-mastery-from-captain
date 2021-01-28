@@ -1467,7 +1467,14 @@ Note. The open-source registry does not support the same authorization model as 
         -  NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
         -  service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6m21s
 
+#####  103. Scaling ReplicaSets
 
+1.  Start a new deployment for one replica/pod
+    -  `kubectl create deployment my-apache --image httpd`
+2.  Scale it up to 2
+    -  `kubectl scale deploy/my-apache --replicas 2`
+    -  the same as
+    -  `kubectl scale deployment my-apache --replicas 2`
 
 
 
