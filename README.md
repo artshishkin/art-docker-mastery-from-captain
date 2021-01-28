@@ -1476,10 +1476,55 @@ Note. The open-source registry does not support the same authorization model as 
     -  the same as
     -  `kubectl scale deployment my-apache --replicas 2`
 
+#####  104. Inspecting Kubernetes Objects
 
-
-
-
-    
+1.  Get Pods
+    -  `kubectl get pods`
+2.  Logs
+    -  `kubectl logs deployment/my-apache`
+    -  Found 2 pods, using pod/my-apache-65fd7bd7db-msc7t
+    -  `kubectl logs deployment/my-apache --follow --tail 1` - tail 1 - last line only
+3.  Using label to combine logs from different pods
+    -  `kubectl logs -l run=my-apache` (not working for me)    
+    -  `kubectl logs -l app=my-apache`
+4.  Describe
+    -  `kubectl get pods`        
+        -  NAME                         READY   STATUS    RESTARTS   AGE
+        -  my-apache-65fd7bd7db-b9wmm   1/1     Running   0          39m
+        -  my-apache-65fd7bd7db-msc7t   1/1     Running   0          42m
+    -  `kubectl describe po  my-apache-65fd7bd7db-b9wmm` - with events
+        -  Name:         my-apache-65fd7bd7db-b9wmm
+        -  Namespace:    default
+        -  Priority:     0
+        -  Node:         node01/172.17.0.27
+        -  Start Time:   Thu, 28 Jan 2021 12:45:02 +0000
+        -  Labels:       app=my-apache
+        -                pod-template-hash=65fd7bd7db
+        -  Annotations:  <none>
+        -  Status:       Running
+        -  IP:           10.244.1.4
+5.  Watch pods command
+    -  `kubectl get pods -w` - `-w` like watch command
+    -  from another window run
+    -  `kubectl delete pod/my-apache-65fd7bd7db-b9wmm`
+    -  first shell shows all the steps
+        -  NAME                         READY   STATUS    RESTARTS   AGE
+        -  my-apache-65fd7bd7db-b9wmm   1/1     Running   0          47m
+        -  my-apache-65fd7bd7db-msc7t   1/1     Running   0          50m
+        -  my-apache-65fd7bd7db-b9wmm   1/1     Terminating   0          52m
+        -  my-apache-65fd7bd7db-zqtxq   0/1     Pending       0          0s
+        -  my-apache-65fd7bd7db-zqtxq   0/1     Pending       0          0s
+        -  my-apache-65fd7bd7db-zqtxq   0/1     ContainerCreating   0          0s
+        -  my-apache-65fd7bd7db-b9wmm   0/1     Terminating         0          52m
+        -  my-apache-65fd7bd7db-zqtxq   1/1     Running             0          5s
+        -  my-apache-65fd7bd7db-b9wmm   0/1     Terminating         0          52m
+        -  my-apache-65fd7bd7db-b9wmm   0/1     Terminating         0          52m        
+    -  watch the pod get re-created
+        -  `kubectl get pods`
+        -  NAME                         READY   STATUS    RESTARTS   AGE
+        -  my-apache-65fd7bd7db-msc7t   1/1     Running   0          56m
+        -  my-apache-65fd7bd7db-zqtxq   1/1     Running   0          43s
+6.  Cleanup
+    -  `kubectl delete deployment my-apache`                
     
                                                                                                                                    
