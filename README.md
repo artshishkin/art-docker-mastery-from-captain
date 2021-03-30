@@ -1701,7 +1701,12 @@ status:
     -  service/currency-exchange created
     -  horizontalpodautoscaler.autoscaling/currency-exchange created    
     
-    
+#####  117. Kubernetes Configuration YAML
+
+Examples
+-  [pod.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fpod.yml)    
+-  [deployment.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fdeployment.yml)    
+-  [app.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fapp.yml)    
     
     
     
