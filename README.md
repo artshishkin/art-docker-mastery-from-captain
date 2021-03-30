@@ -1670,10 +1670,20 @@ status:
 -  CleanUp
     -  `kubectl delete deploy/test`        
     
-    
-    
-    
-    
+#####  112. The Future of Kubectl Run
+
+-  `kubectl run test --image nginx --dry-run=client`
+    -  `pod/test created (dry run)` (Brat Fisher had `deployment.apps/test`)
+-  `kubectl run test --image nginx --port 80 --expose --dry-run=client`    
+    -  `service/test created (dry run)`
+    -  `pod/test created (dry run)`
+-  `kubectl run test --image nginx --restart OnFailure --dry-run=client`
+    -  `pod/test created (dry run)` (Brat Fisher had `job.batch/test`)    
+-  `kubectl run test --image nginx --restart Never --dry-run=client`
+    -  `pod/test created (dry run)` (now it is the default behaviour) 
+-  `kubectl run test --image nginx --schedule "*/1 * * * *" --dry-run=client`
+    -  Flag --schedule has been deprecated, has no effect and will be removed in the future.
+    -  `pod/test created (dry run)` (Brat Fisher had `cronjob.batch/test`)       
     
     
     
