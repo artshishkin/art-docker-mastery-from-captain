@@ -1527,4 +1527,152 @@ Note. The open-source registry does not support the same authorization model as 
 6.  Cleanup
     -  `kubectl delete deployment my-apache`                
     
+####  Section 14: Exposing Kubernetes Ports
+
+#####  107. Creating a ClusterIP Service
+
+1.  In One Windows start monitoring
+    -  `kubectl get pods -w`
+2.  In Window 2 start simple http server
+    -  `kubectl create deployment httpenv --image=bretfisher/httpenv`
+3.  Scale it to 5 replicas    
+    -  `kubectl scale deployment httpenv --replicas=5`
+4.  Create a ClusterIP service (default)    
+    -  `kubectl expose deploy httpenv --port 8888`
+        -  `service/httpenv exposed`  
+5.  Check the service that was created
+    -  `kubectl get svc`
+        -  NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+        -  httpenv      ClusterIP   10.245.136.144   <none>        8888/TCP   6m21s
+        -  kubernetes   ClusterIP   10.245.0.1       <none>        443/TCP    4d18h
+6.  Access Cluster IP
+    -  is accessible from another pod in that cluster
+    -  `kubectl run --generator=run-pod/v1 tmp-shell --rm -it --image bretfisher/netshoot -- bash`
+        -  Flag --generator has been deprecated, has no effect and will be removed in the future.
+        -  If you don't see a command prompt, try pressing enter.
+        -  bash-5.0#
+    -  now from inside the container run
+    -  `curl httpenv:8888`
+        ```json
+        {"HOME":"/root","HOSTNAME":"httpenv-6fdc8554fb-fqsbz","KUBERNETES_PORT":"tcp://10.245.0.1:443","KUBERNETES_PORT_443_TCP":"tcp://10.245.0.1:443","KUBERNETES_PORT_443_TCP_ADDR":"10.245.0.1","KUBERNETES_PORT_443_TCP_PORT":"443","KUBERNETES_PORT_443_TCP_PROTO":"tcp","KUBERNETES_SERVICE_HOST":"10.245.0.1","KUBERNETES_SERVICE_PORT":"443","KUBERNETES_SERVICE_PORT_HTTPS":"443","PATH":"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"}
+        ```
+    -  **or** even `curl  10.245.136.144:8888`     
+    -  `kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash` - simpified
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                                                                                    
