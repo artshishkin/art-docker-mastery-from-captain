@@ -1685,10 +1685,21 @@ status:
     -  Flag --schedule has been deprecated, has no effect and will be removed in the future.
     -  `pod/test created (dry run)` (Brat Fisher had `cronjob.batch/test`)       
     
+####  Section 16: Moving to Declarative Kubernetes YAML    
     
-    
-    
-    
+#####  116. Kubectl apply
+
+-  create/update resources in a file
+    -  `kubectl apply -f myfile.yaml`    
+-  create/update a whole directory of yaml
+    -  `kubectl apply -f myyaml/`    
+-  create/update form a URL
+    -  `kubectl apply -f https://bret.run/pod.yml`    
+-  Example
+    -  `kubectl apply -f https://raw.githubusercontent.com/artshishkin/art-in28minutes-microservices/main/docker/digital-ocean-k8s/currency-exchange-deployment.yaml`
+    -  deployment.apps/currency-exchange created
+    -  service/currency-exchange created
+    -  horizontalpodautoscaler.autoscaling/currency-exchange created    
     
     
     
