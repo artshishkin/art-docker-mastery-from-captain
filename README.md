@@ -1559,10 +1559,40 @@ Note. The open-source registry does not support the same authorization model as 
     -  **or** even `curl  10.245.136.144:8888`     
     -  `kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash` - simpified
     
-    
-    
-    
-    
+#####  108. Creating a NodePort and LoadBalancer Service
+
+1.  Create a NodePort Service
+    -  Let's expose a NodePort so we can access it via the host IP (including localhost on Windows/Linux/MacOS)
+    -  `kubectl expose deployment/httpenv --port 8888 --name httpenv-np --type NodePort`    
+    -  `kubectl get svc`
+        
+        | NAME         | TYPE        | CLUSTER-IP       | EXTERNAL-IP   | PORT(S)          | AGE |
+        | --- | --- | --- | --- | :---: | --- |
+        | httpenv      | ClusterIP   | 10.245.136.144   | `<none>`        | 8888/TCP         | 42m |
+        | httpenv-np   | NodePort    | 10.245.21.183    | `<none>`        | 8888:31129/TCP   | 10s |
+        | kubernetes   | ClusterIP   | 10.245.0.1       | `<none>`        | 443/TCP          | 4d18h |
+        
+    -  port 31129 is from predefined range of container cluster 30000-32767
+    -  NodePort also creates ClusterIP
+    -  LoadBalancer also creates NodePort and ClusterIP
+    -  `curl localhost:31129` (if Kubernetes runs on Desktop)
+    -  **OR**
+    -  `kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash`    
+        -  `curl 172.17.0.1:31129`
+        -  On Docker for Linux, the IP address of the gateway between the Docker host and the bridge network is 172.17.0.1 if you are using default networking.
+    -  also we can access like ClusterIP
+        -  `curl httpenv-np:8888`
+        -  `curl 10.245.21.183:8888`
+2.  Create a LoadBalancer Service
+    -  I used DigitalOcean Kubernetes cluster
+    -  `kubectl expose deployment/httpenv --port 8888 --name httpenv-lb --type LoadBalancer`
+    -  `kubectl get svc` - after some time `<pending>` external IP becomes normal
+        -  `httpenv-lb   LoadBalancer   10.245.103.91    157.245.23.182   8888:31920/TCP   2m28s`
+    -  `curl 157.245.23.182:8888` - OK
+        -  we have 5 pods running so multiple curl shows different `"HOSTNAME":"httpenv-6fdc8554fb-44bnf"`
+3.  Clean up
+    -  `kubectl delete service/httpenv service/httpenv-np`           
+    -  `kubectl delete service/httpenv-lb deployment/httpenv`           
     
     
     
