@@ -1557,7 +1557,7 @@ Note. The open-source registry does not support the same authorization model as 
         {"HOME":"/root","HOSTNAME":"httpenv-6fdc8554fb-fqsbz","KUBERNETES_PORT":"tcp://10.245.0.1:443","KUBERNETES_PORT_443_TCP":"tcp://10.245.0.1:443","KUBERNETES_PORT_443_TCP_ADDR":"10.245.0.1","KUBERNETES_PORT_443_TCP_PORT":"443","KUBERNETES_PORT_443_TCP_PROTO":"tcp","KUBERNETES_SERVICE_HOST":"10.245.0.1","KUBERNETES_SERVICE_PORT":"443","KUBERNETES_SERVICE_PORT_HTTPS":"443","PATH":"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"}
         ```
     -  **or** even `curl  10.245.136.144:8888`     
-    -  `kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash` - simpified
+    -  `kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash` - simplified
     
 #####  108. Creating a NodePort and LoadBalancer Service
 
@@ -1594,13 +1594,81 @@ Note. The open-source registry does not support the same authorization model as 
     -  `kubectl delete service/httpenv service/httpenv-np`           
     -  `kubectl delete service/httpenv-lb deployment/httpenv`           
     
+####  Section 15: Kubernetes Management Techniques    
     
-    
-    
-    
-    
-    
-    
+#####  111. Run, Expose, and Create Generators
+
+-  `kubectl create deployment sample --image nginx --dry-run -o yaml` 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sample
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+```   
+-  jobs - instead of deployments - to run once
+-  `kubectl create job test --image nginx --dry-run -o yaml`    
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: test
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - image: nginx
+        name: test
+        resources: {}
+      restartPolicy: Never
+status: {}
+```    
+-  `kubectl expose deployment/test --port 80 --dry-run -o yaml`
+    -  W0330 22:02:11.794273   16788 helpers.go:553] --dry-run is deprecated and can be replaced with --dry-run=client.
+    -  Error from server (NotFound): deployments.apps "test" not found     
+    -  `kubectl create deployment test --image nginx`
+    -  `kubectl expose deployment/test --port 80 --dry-run=client -o yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: test
+  name: test
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: test
+status:
+  loadBalancer: {}
+```        
+-  CleanUp
+    -  `kubectl delete deploy/test`        
     
     
     
