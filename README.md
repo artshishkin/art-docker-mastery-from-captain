@@ -1767,9 +1767,43 @@ spec:
    revisionHistoryLimit: 10    
 ```    
     
-    
-    
-    
+#####  121. Labels and Label Selectors
+
+1.  Labels
+    -  labels - optional
+    -  under metadata in yaml
+    -  key: value pairs
+    -  for selecting, grouping, filtering etc
+    -  examples:
+        -  tier: frontend
+        -  app: api
+        -  env: prod
+        -  app: my_best_app_name
+        -  customer: acme.co
+    -  not a standard, every team decides how to use
+    -  usage examples:
+        -  filter get commands:
+            -  `kubectl get pods -l app=nginx`
+        -  apply only matching labels 
+            -  `kubectl apply -f myapp.yaml -l app=nginx`
+2.  Label Selectors
+    -  The "glue" telling Services and Deployments which pods are theirs
+    -  Many resources use Label Selectors to "link" resource dependencies
+    -  These match ups are in the Service and Deployment YAML 
+    -  in [app.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/examples/app.yml)       
+        -  in Service we have `spec.selector.app=app-nginx` - label for pods to send traffic to
+        -  in Deployment `spec.selector.matchLabels.app=app-nginx` 
+        -  both objects selecting pods base on that match
+        -  pod must have that label in template
+            -  `spec.template.metadata.labels.app=app-nginx`
+    -  `kubectl explain deployment.spec.selector` - Label selector for pods.
+    -  `kubectl explain service.spec.selector` - Route service traffic to pods with label keys and values matching this selector.
+    -  `kubectl explain deploy.spec.template.metadata.labels`
+        -  Map of string keys and values that can be used to organize and categorize (scope and select) objects.
+        -  May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+3.  Cleanup
+    -  `kubectl delete -f .\app.yml`
+    -  `kubectl get all` - ensure nothing is there    
     
     
     
