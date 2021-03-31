@@ -13,8 +13,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-nginx-deployment
+  labels:
+    servers: dmz
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: app-nginx

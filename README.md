@@ -1745,10 +1745,27 @@ Examples
     -  Ctrl+J
     -  kdep -> Deployment template    
     
-    
-    
-    
-    
+#####  120. Dry Runs and Diff's
+
+1.  Dry Run
+    -  from  [Section 16 - Moving to Declarative Kubernetes YAML\examples](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/examples) folder run   
+    -  `kubectl apply -f app.yml`
+    -  test dry run
+    -  `kubectl apply -f app.yml --dry-run=server`
+        -  service/app-nginx-service unchanged (server dry run)
+        -  deployment.apps/app-nginx-deployment unchanged (server dry run)
+2.  Diff
+    -  `kubectl diff -f app.yml`    
+    -  nothing outputs -> there is no difference
+    -  change replicas to 2
+    -  `kubectl diff -f app.yml`
+```
+spec:
+   progressDeadlineSeconds: 600
+-  replicas: 3
++  replicas: 2
+   revisionHistoryLimit: 10    
+```    
     
     
     
