@@ -1726,9 +1726,24 @@ Examples
     -  metadata: only name is required
     -  spec: Where all the action is at     
     
-    
-    
-    
+#####  119. Building Your YAML Spec
+
+1.  Get all Spec keys
+    -  From api-resources get 
+    -  Kind: Service ->
+    -  Name: services ->  
+    -  `kubectl explain services --recursive`    
+2.  Detailed specification
+    -  `kubectl explain services.spec`
+    -  TL;DR))    
+    -  `kubectl explain services.spec.type`
+    -  `kubectl explain deployment.spec.template.spec.volumes.nfs.server`
+3.  We can also use docs
+    -  [api-reference](https://kubernetes.io/docs/reference/#api-reference)   
+4.  We can use IDE
+    -  for example IntelliJ IDEA
+    -  Ctrl+J
+    -  kdep -> Deployment template    
     
     
     
