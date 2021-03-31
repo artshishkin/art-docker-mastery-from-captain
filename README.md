@@ -1704,9 +1704,9 @@ status:
 #####  117. Kubernetes Configuration YAML
 
 Examples
--  [pod.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fpod.yml)    
--  [deployment.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fdeployment.yml)    
--  [app.yml](Section+16+-+Moving+to+Declarative+Kubernetes+YAML%2Fapp.yml)    
+-  [pod.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/pod.yml)    
+-  [deployment.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/deployment.yml)    
+-  [app.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/app.yml)    
     
     
     
