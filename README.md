@@ -1704,13 +1704,27 @@ status:
 #####  117. Kubernetes Configuration YAML
 
 Examples
--  [pod.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/pod.yml)    
--  [deployment.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/deployment.yml)    
--  [app.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/app.yml)    
+-  [pod.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/examples/pod.yml)    
+-  [deployment.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/examples/deployment.yml)    
+-  [app.yml](Section%2016%20-%20Moving%20to%20Declarative%20Kubernetes%20YAML/examples/app.yml)    
     
-    
-    
-    
+#####  118. Building Your YAML Files
+
+1.  Get list of resources
+    -  `kubectl api-resources` -> view columns:
+        -  KIND - related to **kind** field of Kubernetes objects
+        -  APIGROUP - related to ApiVersion    
+2.  Get list of versions
+    -  `kubectl api-versions`
+        -  from api-resources
+            -  `deployments                        deploy         apps                           true         Deployment`
+        -  from versions
+            -  `apps/v1`     
+3.  Build parts
+    -  kind (#1)
+    -  apiVersion (#2)
+    -  metadata: only name is required
+    -  spec: Where all the action is at     
     
     
     
