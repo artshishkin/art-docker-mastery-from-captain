@@ -1837,9 +1837,19 @@ spec:
     -  **Helm** was the first "winner" in this space, but can be complex
     -  Official **Kustomize** feature works out-of-the-box
     -  `docker app COMMAND` and compose-on-kubernetes are Docker's way 
-    
-    
-    
+
+#####  127. Kubernetes Dashboard    
+
+#####  128. Namespaces and Context
+
+Namespaces limit scope aka "virtual clusters"
+-  `kubectl get namespaces`
+-  `kubectl get all` - only `service/kubernetes`
+-  `kubectl get all --all-namespaces` - from all namespaces MUCH more
+-  `kubectl config get-contexts` - I have only 1 config context
+    -  CURRENT   NAME                           CLUSTER                        AUTHINFO                             NAMESPACE
+    -  *         do-fra1-my-first-k8s-cluster   do-fra1-my-first-k8s-cluster   do-fra1-my-first-k8s-cluster-admin   
+-  `kubectl config set*` commands    
     
     
     
