@@ -1673,17 +1673,17 @@ status:
 #####  112. The Future of Kubectl Run
 
 -  `kubectl run test --image nginx --dry-run=client`
-    -  `pod/test created (dry run)` (Brat Fisher had `deployment.apps/test`)
+    -  `pod/test created (dry run)` (Bret Fisher had `deployment.apps/test`)
 -  `kubectl run test --image nginx --port 80 --expose --dry-run=client`    
     -  `service/test created (dry run)`
     -  `pod/test created (dry run)`
 -  `kubectl run test --image nginx --restart OnFailure --dry-run=client`
-    -  `pod/test created (dry run)` (Brat Fisher had `job.batch/test`)    
+    -  `pod/test created (dry run)` (Bret Fisher had `job.batch/test`)    
 -  `kubectl run test --image nginx --restart Never --dry-run=client`
     -  `pod/test created (dry run)` (now it is the default behaviour) 
 -  `kubectl run test --image nginx --schedule "*/1 * * * *" --dry-run=client`
     -  Flag --schedule has been deprecated, has no effect and will be removed in the future.
-    -  `pod/test created (dry run)` (Brat Fisher had `cronjob.batch/test`)       
+    -  `pod/test created (dry run)` (Bret Fisher had `cronjob.batch/test`)       
     
 ####  Section 16: Moving to Declarative Kubernetes YAML    
     
@@ -1805,10 +1805,23 @@ spec:
     -  `kubectl delete -f .\app.yml`
     -  `kubectl get all` - ensure nothing is there    
     
+####  Section 17: Your Next Steps and The Future of Kubernetes
+
+#####  123. Storage in Kubernetes    
     
-    
-    
-    
+1.  StatefulSets is a new resource type making Pods more sticky
+2.  Bret's recommendations: 
+    -  avoid stateful workloads for first few deployments until you're good at the basics
+    -  use db-as-a-service whenever you can       
+3.  Volumes in Kubernetes
+    -  Volumes
+        -  Tied to lifecycle of a Pod
+        -  All containers in a single Pod can share them
+    -  PersistentVolumes
+        -  Created at a cluster level, outlives a Pod
+        -  Separates storage config from Pod using it
+        -  Multiple Pods can share them
+    -  CSI plugins are the new way to connect to storage       
     
     
     
