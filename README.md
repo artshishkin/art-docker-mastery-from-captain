@@ -1823,9 +1823,20 @@ spec:
         -  Multiple Pods can share them
     -  CSI plugins are the new way to connect to storage       
     
+#####  124. Ingress    
     
-    
-    
+#####  125. CRD's and The Operator Pattern
+
+#####  126. Higher Deployment Abstractions
+
+-  Helm is the most popular tool for templating, versioning, tracking and management of apps
+-  "Compose on Kubernetes" comes with Docker Desktop
+-  Templating YAML
+    -  Many of the deployment tools have templating options
+    -  You'll need a solution as the number of environments/apps grow
+    -  **Helm** was the first "winner" in this space, but can be complex
+    -  Official **Kustomize** feature works out-of-the-box
+    -  `docker app COMMAND` and compose-on-kubernetes are Docker's way 
     
     
     
